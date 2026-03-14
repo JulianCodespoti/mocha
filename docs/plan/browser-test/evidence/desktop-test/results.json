@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-03-14T05:14:23.323Z",
+  "url": "https://juliancodespoti.github.io/mocha/",
+  "viewports": [
+    "1440x900",
+    "1920x1080"
+  ],
+  "total_issues": 3,
+  "issues_by_severity": {
+    "critical": 1,
+    "major": 1,
+    "minor": 1,
+    "cosmetic": 0
+  },
+  "issues": [
+    {
+      "area": "Preloader",
+      "severity": "critical",
+      "description": "Preloader did not dismiss after page load — still visible",
+      "selector": "#preloader",
+      "evidence": ""
+    },
+    {
+      "area": "Visual",
+      "severity": "major",
+      "description": "Section #hero has horizontal overflow (scrollWidth: 2016 > width: 1920)",
+      "selector": "#hero",
+      "evidence": "1920x1080"
+    },
+    {
+      "area": "Accessibility",
+      "severity": "minor",
+      "description": "Interstitial text has low opacity (0.5): color rgba(250, 245, 239, 0.5) on dark bg may fail WCAG AA contrast (4.5:1 required)",
+      "selector": ".interstitial p",
+      "evidence": ""
+    }
+  ]
+}

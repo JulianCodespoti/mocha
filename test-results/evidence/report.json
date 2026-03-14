@@ -1,0 +1,213 @@
+{
+  "timestamp": "2026-03-14T05:14:27.912Z",
+  "url": "https://juliancodespoti.github.io/mocha/",
+  "viewports": [
+    {
+      "name": "iPhone_14_Pro",
+      "width": 393,
+      "height": 852
+    },
+    {
+      "name": "iPhone_SE",
+      "width": 375,
+      "height": 667
+    },
+    {
+      "name": "Galaxy_S21",
+      "width": 360,
+      "height": 800
+    }
+  ],
+  "totalIssues": 27,
+  "issues": [
+    {
+      "description": "Horizontal overflow detected: 104px wider than viewport",
+      "severity": "critical",
+      "device": "iPhone_14_Pro",
+      "selector": "html",
+      "extra": "{\"scrollWidth\":497,\"clientWidth\":393,\"diff\":104}"
+    },
+    {
+      "description": "Header wider than viewport: 497px > 393px",
+      "severity": "major",
+      "device": "iPhone_14_Pro",
+      "selector": "header",
+      "extra": ""
+    },
+    {
+      "description": "Nav link \"Portraits\" touch target too small: 20px height (min 44px)",
+      "severity": "major",
+      "device": "iPhone_14_Pro",
+      "selector": "header nav a",
+      "extra": "Size: 92.609375x20"
+    },
+    {
+      "description": "Nav link \"Adventures\" touch target too small: 20px height (min 44px)",
+      "severity": "major",
+      "device": "iPhone_14_Pro",
+      "selector": "header nav a",
+      "extra": "Size: 107x20"
+    },
+    {
+      "description": "Nav link \"Adventures\" extends beyond viewport",
+      "severity": "major",
+      "device": "iPhone_14_Pro",
+      "selector": "header nav a",
+      "extra": ""
+    },
+    {
+      "description": "Nav link \"Cozy\" touch target too small: 20px height (min 44px)",
+      "severity": "major",
+      "device": "iPhone_14_Pro",
+      "selector": "header nav a",
+      "extra": "Size: 45.609375x20"
+    },
+    {
+      "description": "Nav link \"Cozy\" extends beyond viewport",
+      "severity": "major",
+      "device": "iPhone_14_Pro",
+      "selector": "header nav a",
+      "extra": ""
+    },
+    {
+      "description": "Lightbox close button too small: 35x35",
+      "severity": "minor",
+      "device": "iPhone_14_Pro",
+      "selector": ".gclose",
+      "extra": ""
+    },
+    {
+      "description": "8 navigation links have touch targets < 44px",
+      "severity": "major",
+      "device": "iPhone_14_Pro",
+      "selector": "nav a",
+      "extra": "\"Mocha\": 65x28, \"Portraits\": 93x20, \"Adventures\": 107x20, \"Cozy\": 46x20, \"\": 32x32, \"Portraits\": 345x20, \"Adventures\": 345x20, \"Cozy Moments\": 345x20"
+    },
+    {
+      "description": "Horizontal overflow detected: 113px wider than viewport",
+      "severity": "critical",
+      "device": "iPhone_SE",
+      "selector": "html",
+      "extra": "{\"scrollWidth\":488,\"clientWidth\":375,\"diff\":113}"
+    },
+    {
+      "description": "Header wider than viewport: 488px > 375px",
+      "severity": "major",
+      "device": "iPhone_SE",
+      "selector": "header",
+      "extra": ""
+    },
+    {
+      "description": "Nav link \"Portraits\" touch target too small: 20px height (min 44px)",
+      "severity": "major",
+      "device": "iPhone_SE",
+      "selector": "header nav a",
+      "extra": "Size: 92.609375x20"
+    },
+    {
+      "description": "Nav link \"Adventures\" touch target too small: 20px height (min 44px)",
+      "severity": "major",
+      "device": "iPhone_SE",
+      "selector": "header nav a",
+      "extra": "Size: 107x20"
+    },
+    {
+      "description": "Nav link \"Adventures\" extends beyond viewport",
+      "severity": "major",
+      "device": "iPhone_SE",
+      "selector": "header nav a",
+      "extra": ""
+    },
+    {
+      "description": "Nav link \"Cozy\" touch target too small: 20px height (min 44px)",
+      "severity": "major",
+      "device": "iPhone_SE",
+      "selector": "header nav a",
+      "extra": "Size: 45.609375x20"
+    },
+    {
+      "description": "Nav link \"Cozy\" extends beyond viewport",
+      "severity": "major",
+      "device": "iPhone_SE",
+      "selector": "header nav a",
+      "extra": ""
+    },
+    {
+      "description": "Lightbox close button too small: 35x35",
+      "severity": "minor",
+      "device": "iPhone_SE",
+      "selector": ".gclose",
+      "extra": ""
+    },
+    {
+      "description": "8 navigation links have touch targets < 44px",
+      "severity": "major",
+      "device": "iPhone_SE",
+      "selector": "nav a",
+      "extra": "\"Mocha\": 65x28, \"Portraits\": 93x20, \"Adventures\": 107x20, \"Cozy\": 46x20, \"\": 32x32, \"Portraits\": 327x20, \"Adventures\": 327x20, \"Cozy Moments\": 327x20"
+    },
+    {
+      "description": "Horizontal overflow detected: 120px wider than viewport",
+      "severity": "critical",
+      "device": "Galaxy_S21",
+      "selector": "html",
+      "extra": "{\"scrollWidth\":480,\"clientWidth\":360,\"diff\":120}"
+    },
+    {
+      "description": "Header wider than viewport: 480px > 360px",
+      "severity": "major",
+      "device": "Galaxy_S21",
+      "selector": "header",
+      "extra": ""
+    },
+    {
+      "description": "Nav link \"Portraits\" touch target too small: 20px height (min 44px)",
+      "severity": "major",
+      "device": "Galaxy_S21",
+      "selector": "header nav a",
+      "extra": "Size: 92.609375x20"
+    },
+    {
+      "description": "Nav link \"Adventures\" touch target too small: 20px height (min 44px)",
+      "severity": "major",
+      "device": "Galaxy_S21",
+      "selector": "header nav a",
+      "extra": "Size: 107x20"
+    },
+    {
+      "description": "Nav link \"Adventures\" extends beyond viewport",
+      "severity": "major",
+      "device": "Galaxy_S21",
+      "selector": "header nav a",
+      "extra": ""
+    },
+    {
+      "description": "Nav link \"Cozy\" touch target too small: 20px height (min 44px)",
+      "severity": "major",
+      "device": "Galaxy_S21",
+      "selector": "header nav a",
+      "extra": "Size: 45.609375x20"
+    },
+    {
+      "description": "Nav link \"Cozy\" extends beyond viewport",
+      "severity": "major",
+      "device": "Galaxy_S21",
+      "selector": "header nav a",
+      "extra": ""
+    },
+    {
+      "description": "Lightbox close button too small: 35x35",
+      "severity": "minor",
+      "device": "Galaxy_S21",
+      "selector": ".gclose",
+      "extra": ""
+    },
+    {
+      "description": "8 navigation links have touch targets < 44px",
+      "severity": "major",
+      "device": "Galaxy_S21",
+      "selector": "nav a",
+      "extra": "\"Mocha\": 65x28, \"Portraits\": 93x20, \"Adventures\": 107x20, \"Cozy\": 46x20, \"\": 32x32, \"Portraits\": 312x20, \"Adventures\": 312x20, \"Cozy Moments\": 312x20"
+    }
+  ]
+}

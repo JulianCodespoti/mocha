@@ -208,7 +208,7 @@
       font-family: 'Playfair Display', Georgia, serif;
       font-style: italic;
       font-size: 1.25rem;
-      color: rgba(250, 245, 239, 0.5);
+      color: rgba(250, 245, 239, 0.6);
       max-width: 36rem;
       margin: 0 auto;
       line-height: 1.8;
@@ -277,17 +277,36 @@
       border-bottom: 1px solid rgba(212, 165, 116, 0.08);
     }
 
+    /* ── Mobile Menu ────────────────────────────────── */
+    .mobile-menu.open {
+      max-height: 220px;
+    }
+    #menuToggle.open .menu-line:nth-child(1) {
+      transform: translateY(4px) rotate(45deg);
+    }
+    #menuToggle.open .menu-line:nth-child(2) {
+      opacity: 0;
+    }
+    #menuToggle.open .menu-line:nth-child(3) {
+      width: 1.5rem;
+      transform: translateY(-4px) rotate(-45deg);
+    }
+
     /* ── GLightbox Overrides ──────────────────────────── */
     .glightbox-clean .gclose,
     .glightbox-clean .gnext,
     .glightbox-clean .gprev {
       background-color: rgba(212, 165, 116, 0.15);
       border: 1px solid rgba(212, 165, 116, 0.25);
+      min-width: 44px;
+      min-height: 44px;
     }
-    .glightbox-clean .gclose:hover,
-    .glightbox-clean .gnext:hover,
-    .glightbox-clean .gprev:hover {
-      background-color: rgba(212, 165, 116, 0.3);
+    @media (hover: hover) {
+      .glightbox-clean .gclose:hover,
+      .glightbox-clean .gnext:hover,
+      .glightbox-clean .gprev:hover {
+        background-color: rgba(212, 165, 116, 0.3);
+      }
     }
 
     /* ── Decorative divider ───────────────────────────── */
@@ -492,9 +511,9 @@
   <!-- ════════════════════════════════════════════════════
        PRELOADER
        ════════════════════════════════════════════════════ -->
-  <div id="preloader" class="fixed inset-0 z-[100] bg-mocha-bg flex items-center justify-center flex-col">
+  <div id="preloader" class="fixed inset-0 z-[100] bg-mocha-bg flex items-center justify-center flex-col" aria-hidden="true">
     <div class="preloader-content text-center">
-      <h1 class="font-display text-5xl sm:text-7xl text-mocha-cream mb-6 preloader-title" style="letter-spacing: 0.3em;">MOCHA</h1>
+      <div class="font-display text-5xl sm:text-7xl text-mocha-cream mb-6 preloader-title" style="letter-spacing: 0.3em;">MOCHA</div>
       <svg class="preloader-paw w-12 h-12 text-mocha-gold mx-auto" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3">
         <ellipse cx="50" cy="65" rx="22" ry="28"/>
         <circle cx="28" cy="35" r="12"/>
@@ -513,18 +532,27 @@
       <a href="#" class="font-display text-xl md:text-2xl font-semibold tracking-wide text-mocha-gold hover:text-mocha-cream transition-colors duration-300">
         Mocha
       </a>
-      <nav aria-label="Primary" class="flex items-center gap-4 sm:gap-6">
-        <a href="#portraits" class="text-sm font-medium tracking-widest uppercase text-mocha-cream/70 hover:text-mocha-gold transition-colors duration-300">
-          Portraits
-        </a>
-        <a href="#adventures" class="text-sm font-medium tracking-widest uppercase text-mocha-cream/70 hover:text-mocha-gold transition-colors duration-300">
-          Adventures
-        </a>
-        <a href="#cozy-moments" class="text-sm font-medium tracking-widest uppercase text-mocha-cream/70 hover:text-mocha-gold transition-colors duration-300">
-          Cozy
-        </a>
+      <!-- Desktop nav -->
+      <nav aria-label="Primary" class="hidden sm:flex items-center gap-6">
+        <a href="#portraits" class="nav-link text-sm font-medium tracking-widest uppercase text-mocha-cream/70 hover:text-mocha-gold transition-colors duration-300">Portraits</a>
+        <a href="#adventures" class="nav-link text-sm font-medium tracking-widest uppercase text-mocha-cream/70 hover:text-mocha-gold transition-colors duration-300">Adventures</a>
+        <a href="#cozy-moments" class="nav-link text-sm font-medium tracking-widest uppercase text-mocha-cream/70 hover:text-mocha-gold transition-colors duration-300">Cozy</a>
       </nav>
+      <!-- Mobile hamburger -->
+      <button id="menuToggle" class="sm:hidden flex flex-col justify-center items-center w-11 h-11 gap-1.5" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span class="menu-line block w-6 h-0.5 bg-mocha-cream transition-all duration-300 origin-center"></span>
+        <span class="menu-line block w-6 h-0.5 bg-mocha-cream transition-all duration-300 origin-center"></span>
+        <span class="menu-line block w-4 h-0.5 bg-mocha-cream transition-all duration-300 origin-center"></span>
+      </button>
     </div>
+    <!-- Mobile menu overlay -->
+    <nav id="mobileMenu" aria-label="Mobile" class="mobile-menu sm:hidden overflow-hidden max-h-0 transition-all duration-400 ease-in-out">
+      <div class="flex flex-col items-center gap-1 py-6 border-t border-mocha-border/30 mt-3">
+        <a href="#portraits" class="mobile-nav-link nav-link text-sm font-medium tracking-widest uppercase text-mocha-cream/70 hover:text-mocha-gold transition-colors duration-300 py-3 px-6 w-full text-center">Portraits</a>
+        <a href="#adventures" class="mobile-nav-link nav-link text-sm font-medium tracking-widest uppercase text-mocha-cream/70 hover:text-mocha-gold transition-colors duration-300 py-3 px-6 w-full text-center">Adventures</a>
+        <a href="#cozy-moments" class="mobile-nav-link nav-link text-sm font-medium tracking-widest uppercase text-mocha-cream/70 hover:text-mocha-gold transition-colors duration-300 py-3 px-6 w-full text-center">Cozy Moments</a>
+      </div>
+    </nav>
   </header>
 
   <!-- ════════════════════════════════════════════════════
@@ -1028,9 +1056,9 @@
         <div>
           <h4 class="text-mocha-cream text-xs uppercase tracking-widest mb-4">Gallery</h4>
           <nav aria-label="Footer" class="flex flex-col gap-2">
-            <a href="#portraits" class="text-mocha-muted hover:text-mocha-gold transition-colors text-sm">Portraits</a>
-            <a href="#adventures" class="text-mocha-muted hover:text-mocha-gold transition-colors text-sm">Adventures</a>
-            <a href="#cozy-moments" class="text-mocha-muted hover:text-mocha-gold transition-colors text-sm">Cozy Moments</a>
+            <a href="#portraits" class="text-mocha-muted hover:text-mocha-gold transition-colors text-sm py-2 inline-block">Portraits</a>
+            <a href="#adventures" class="text-mocha-muted hover:text-mocha-gold transition-colors text-sm py-2 inline-block">Adventures</a>
+            <a href="#cozy-moments" class="text-mocha-muted hover:text-mocha-gold transition-colors text-sm py-2 inline-block">Cozy Moments</a>
           </nav>
         </div>
 
@@ -1317,7 +1345,7 @@
 
     /* ── Nav Link Active State ────────────────────────── */
     const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('nav a[href^="#"]');
+    const navLinks = document.querySelectorAll('.nav-link');
 
     const sectionObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -1336,6 +1364,25 @@
     }, { threshold: 0.3 });
 
     sections.forEach(section => sectionObserver.observe(section));
+
+    /* ── Mobile Menu Toggle ─────────────────────────── */
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (menuToggle && mobileMenu) {
+      menuToggle.addEventListener('click', () => {
+        const isOpen = mobileMenu.classList.toggle('open');
+        menuToggle.classList.toggle('open');
+        menuToggle.setAttribute('aria-expanded', isOpen);
+      });
+      // Close menu when a link is tapped
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.remove('open');
+          menuToggle.classList.remove('open');
+          menuToggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
   </script>
 
 </body>
