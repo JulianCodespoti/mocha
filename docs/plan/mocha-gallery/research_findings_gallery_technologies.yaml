@@ -1,0 +1,761 @@
+plan_id: mocha-gallery
+objective: "Research modern web technologies and design patterns for creating an innovative, visually stunning single-page photo gallery/showcase website for ~39 JPG photos of a miniature dachshund named Mocha"
+focus_area: "Gallery Technologies, UI Patterns, Performance, and Design"
+created_at: "2025-07-17"
+created_by: "gem-researcher"
+status: completed
+
+tldr: |
+  - 39 photos, all 3088x2056 (3:2 landscape), 1.4-2.7MB each (81MB total) — uniform aspect ratio simplifies layout but 81MB total demands aggressive lazy loading
+  - Recommended stack: Tailwind CSS v4 via Play CDN + GSAP 3 with ScrollTrigger (both CDN-loadable, zero build step), plus modern CSS features (scroll-snap, scroll-driven animations, view transitions)
+  - CSS-native masonry is emerging (display: grid-lanes) but has limited browser support; JS-based masonry or CSS column-count fallback is needed today
+  - Scroll-driven animations (animation-timeline: scroll()) are supported in Chrome 115+ and provide performant, off-main-thread scroll effects — ideal for parallax/reveal patterns
+  - Key UX pattern recommendation: multi-section single page with hero → horizontal scroll showcase → masonry grid → full-screen lightbox, all tied together with scroll-triggered animations
+
+research_metadata:
+  methodology: "Hybrid retrieval: local file analysis (identify, du, ls) + web research (MDN docs, Chrome DevDocs, GSAP docs, Tailwind docs, web.dev articles) for latest API specs and browser support"
+  scope: "Comprehensive analysis of: asset characteristics, CSS/JS framework options, gallery UI patterns, performance optimization, and design aesthetics for pet photo showcases"
+  confidence: high
+  coverage: 95
+
+files_analyzed:
+  - file: "Photo collection (39 JPGs)"
+    path: /home/domjules/Coding/mocha/
+    purpose: "Source photo assets for the gallery"
+    key_elements:
+      - element: "All 39 images"
+        type: pattern
+        location: "IMG_9060.JPG through IMG_9148.JPG"
+        description: "Uniform 3088x2056px (3:2 landscape ratio), sRGB, 8-bit JPEG. Sizes range from 1.4MB (IMG_9096.JPG) to 2.7MB (IMG_9090.JPG). Total: 81MB. All dated Jan 23-24, 2023."
+    language: N/A
+    lines: 0
+
+patterns_found:
+  - category: asset_characteristics
+    pattern: "Uniform aspect ratio photos"
+    description: "All 39 photos share identical 3088x2056 dimensions (3:2 landscape). This uniformity is a significant design advantage — it allows consistent grid cells, predictable masonry layouts, and uniform thumbnail sizing without complex responsive calculations."
+    examples:
+      - file: IMG_9060.JPG
+        location: "3088x2056"
+        snippet: "identify IMG_9060.JPG → 3088x2056+0+0 8-bit sRGB 1.51MiB"
+    prevalence: common
+
+  - category: asset_characteristics
+    pattern: "High-resolution source images"
+    description: "At 3088x2056, these are high-res photos suitable for full-screen display on most monitors (up to ~3K). For web delivery, multiple size variants should be generated (thumbnail ~400px, medium ~800px, large ~1600px, full ~3088px)."
+    examples:
+      - file: IMG_9090.JPG
+        location: "2.7MB largest"
+        snippet: "du -sh IMG_9090.JPG → 2.7M"
+    prevalence: common
+
+related_architecture:
+  components_relevant_to_domain:
+    - component: "Hero Section"
+      responsibility: "Full-viewport opening with featured photo, site title, and scroll indicator"
+      location: "Top of single-page layout"
+      relationship_to_domain: "First impression; sets tone with best photo"
+
+    - component: "Horizontal Scroll Showcase"
+      responsibility: "Curated horizontal filmstrip of featured photos with scroll-snap"
+      location: "Second section"
+      relationship_to_domain: "Interactive discovery section with CSS scroll-snap-type: x mandatory"
+
+    - component: "Masonry/Grid Gallery"
+      responsibility: "Browse-all grid of all 39 photos with reveal animations"
+      location: "Third section"
+      relationship_to_domain: "Main gallery view; uses CSS grid or masonry layout"
+
+    - component: "Lightbox/Modal Viewer"
+      responsibility: "Full-screen individual photo view with navigation"
+      location: "Overlay on click"
+      relationship_to_domain: "Detail view with keyboard/gesture nav and zoom"
+
+    - component: "Footer"
+      responsibility: "Credits and closing content"
+      location: "Bottom"
+      relationship_to_domain: "Closing section with Mocha's name/info"
+
+  interfaces_used_by_domain:
+    - interface: "Native loading='lazy' attribute"
+      location: "HTML img elements"
+      usage_pattern: "Browser-native lazy loading for offscreen images"
+
+    - interface: "IntersectionObserver API"
+      location: "JavaScript"
+      usage_pattern: "Triggering reveal animations and enhanced lazy loading with blur-up patterns"
+
+    - interface: "CSS Scroll Snap API"
+      location: "CSS on scroll containers"
+      usage_pattern: "scroll-snap-type: x mandatory on horizontal scroll sections"
+
+    - interface: "CSS Scroll-Driven Animations"
+      location: "CSS animation-timeline property"
+      usage_pattern: "animation-timeline: scroll() for parallax and progress indicators"
+
+    - interface: "View Transition API"
+      location: "JavaScript document.startViewTransition()"
+      usage_pattern: "Smooth transitions between gallery and lightbox views"
+
+  data_flow_involving_domain: |
+    1. HTML loads with inline placeholder dimensions (width/height attributes prevent CLS)
+    2. First ~6-8 images load eagerly (above fold / hero + first visible cards)
+    3. Remaining images use loading="lazy" — browser fetches as user scrolls near them
+    4. IntersectionObserver triggers CSS class additions for reveal animations
+    5. GSAP ScrollTrigger scrubs animations tied to scroll position
+    6. Click on image → View Transition API animates to lightbox overlay
+    7. Keyboard/touch navigation within lightbox
+
+  key_relationships_to_domain:
+    - from: "Tailwind CSS v4 (CDN)"
+      to: "All components"
+      relationship: "Utility-first styling framework"
+    - from: "GSAP + ScrollTrigger"
+      to: "Hero, Gallery, Showcase sections"
+      relationship: "Scroll-driven animation engine"
+    - from: "CSS scroll-snap"
+      to: "Horizontal Showcase"
+      relationship: "Native snap points for filmstrip"
+    - from: "IntersectionObserver"
+      to: "Gallery grid items"
+      relationship: "Lazy load trigger + animation trigger"
+
+related_technology_stack:
+  languages_used_in_domain:
+    - HTML5
+    - CSS3 (modern features)
+    - Vanilla JavaScript (ES2022+)
+
+  frameworks_used_in_domain:
+    - name: "Tailwind CSS v4 (Play CDN)"
+      usage_in_domain: |
+        Utility-first CSS framework loaded via CDN with zero build step.
+        CDN URL: https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4
+        Loaded as a <script> tag in <head>.
+        Supports custom themes via <style type="text/tailwindcss"> blocks.
+        Ideal for: rapid prototyping, responsive design, dark mode, spacing, typography.
+        NOT for production at scale (Play CDN is dev-oriented), but perfect for a personal showcase.
+        Tailwind v4 uses CSS-first configuration — no tailwind.config.js needed.
+
+    - name: "GSAP 3 (GreenSock Animation Platform)"
+      usage_in_domain: |
+        Industry-standard animation library for scroll-driven animations.
+        CDN: https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js
+        ScrollTrigger plugin: https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js
+        Key features for this project:
+          - ScrollTrigger: link animations to scroll position (scrub, pin, snap)
+          - Pinning: lock hero section while animations play
+          - Staggered reveals: animate gallery items in sequence
+          - Smooth scrubbing: scrub: 1 for 1-second catch-up smoothing
+          - Snapping: snap to section boundaries
+        Free for personal/non-commercial use. All plugins now freely available on npm.
+        Must call gsap.registerPlugin(ScrollTrigger) after loading.
+
+  libraries_used_in_domain:
+    - name: "No additional libraries required"
+      purpose_in_domain: |
+        The combination of Tailwind CSS + GSAP + modern CSS/JS APIs provides everything needed.
+        Optional lightweight additions:
+          - GLightbox (~10KB): lightweight lightbox with touch gestures
+          - Lenis (~15KB): smooth scroll library (alternative: CSS scroll-behavior: smooth)
+
+  external_apis_used_in_domain: []
+
+related_conventions:
+  naming_patterns_in_domain: |
+    Photo files follow camera naming: IMG_NNNN.JPG
+    For production, consider renaming to semantic names: mocha-portrait-01.jpg, mocha-playing-02.jpg
+    CSS classes should use Tailwind utility conventions or BEM for custom styles
+
+  structure_of_domain: |
+    Single HTML file structure (index.html):
+      <head>: meta, Tailwind CDN, custom styles, font links
+      <body>:
+        <section id="hero">: Full-screen hero with featured photo
+        <section id="showcase">: Horizontal scroll filmstrip
+        <section id="gallery">: Masonry/grid of all photos
+        <div id="lightbox">: Modal overlay for full-screen viewing
+        <footer>: Credits
+      <script>: GSAP CDN, ScrollTrigger CDN, inline app JS
+    
+    Optional: Separate CSS file for custom animations (@keyframes)
+    Optional: Separate JS file for gallery logic
+
+  error_handling_in_domain: |
+    - img onerror handlers for broken image fallbacks
+    - CSS aspect-ratio or width/height on img tags to prevent CLS
+    - Graceful degradation: if GSAP fails to load, gallery still shows (CSS-only layout)
+    - @supports queries for scroll-driven animations
+
+  testing_in_domain: |
+    Manual testing across browsers (Chrome, Firefox, Safari)
+    Lighthouse performance audits
+    Core Web Vitals monitoring (LCP, CLS, FID)
+
+  documentation_in_domain: |
+    Inline HTML comments for section boundaries
+    CSS custom properties documented at :root level
+
+related_dependencies:
+  internal: []
+  external:
+    - name: "Tailwind CSS v4 Browser CDN"
+      purpose_for_domain: "Utility-first CSS framework — @tailwindcss/browser@4 via jsdelivr"
+    - name: "GSAP 3 Core"
+      purpose_for_domain: "Animation engine — gsap@3 via jsdelivr CDN"
+    - name: "GSAP ScrollTrigger Plugin"
+      purpose_for_domain: "Scroll-driven animation binding — ScrollTrigger.min.js via jsdelivr CDN"
+    - name: "Google Fonts (optional)"
+      purpose_for_domain: "Premium typography — e.g., 'Playfair Display' for headings, 'Inter' for body"
+
+# ============================================================
+# DETAILED TECHNOLOGY RESEARCH FINDINGS
+# ============================================================
+
+detailed_findings:
+
+  # ----- SECTION 1: CSS/JS FRAMEWORK OPTIONS -----
+  css_js_frameworks:
+    tailwind_css_v4:
+      recommendation: PRIMARY
+      rationale: |
+        Tailwind CSS v4 via Play CDN is the ideal choice for this project:
+        1. Zero build step — single <script> tag in HTML
+        2. CSS-first configuration — use @theme in <style type="text/tailwindcss">
+        3. Comprehensive utility classes for responsive design, spacing, colors, effects
+        4. Built-in dark mode support (class or media query based)
+        5. Excellent for rapid development of polished UIs
+      cdn_url: "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"
+      installation: |
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <style type="text/tailwindcss">
+          @theme {
+            --color-mocha: #8B4513;
+            --color-cream: #FFF8DC;
+            --font-display: 'Playfair Display', serif;
+          }
+        </style>
+      key_utilities_for_gallery:
+        - "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4  — responsive grid"
+        - "aspect-[3/2]  — match photo aspect ratio"
+        - "object-cover  — fill containers without distortion"
+        - "hover:scale-105 transition-transform duration-300  — zoom on hover"
+        - "opacity-0 translate-y-8 transition-all duration-700  — reveal animation base"
+        - "overflow-x-auto snap-x snap-mandatory  — horizontal scroll with snap"
+        - "snap-center  — snap alignment for each card"
+        - "fixed inset-0 z-50 bg-black/90  — lightbox overlay"
+        - "backdrop-blur-sm  — frosted glass effect"
+
+    modern_css_features:
+      recommendation: ESSENTIAL_COMPLEMENT
+      rationale: "Modern CSS provides native alternatives to many JS libraries"
+      features:
+        scroll_snap:
+          browser_support: "97%+ global (all modern browsers)"
+          usage: |
+            Perfect for horizontal photo filmstrip:
+            .showcase { overflow-x: auto; scroll-snap-type: x mandatory; }
+            .showcase-item { scroll-snap-align: center; scroll-snap-stop: always; }
+          key_properties:
+            - "scroll-snap-type: x mandatory | y proximity"
+            - "scroll-snap-align: start | center | end"
+            - "scroll-snap-stop: always | normal"
+            - "scroll-padding: for offset from edges"
+            - "overscroll-behavior-x: contain  — prevent page scroll"
+
+        scroll_driven_animations:
+          browser_support: "Chrome 115+, Edge 115+. NOT in Firefox or Safari (as of mid-2025)"
+          usage: |
+            CSS-only parallax and scroll-linked effects without JavaScript:
+            @keyframes parallax-up { from { transform: translateY(100px); } to { transform: translateY(-100px); } }
+            .hero-image { animation: parallax-up linear; animation-timeline: scroll(); }
+          key_concepts:
+            - "animation-timeline: scroll()  — link to scroll progress"
+            - "animation-timeline: scroll(root block)  — viewport scroll, block axis"
+            - "animation-timeline: view()  — link to element's visibility in viewport"
+            - "animation-range: entry 0% entry 100%  — animate during entry"
+            - "Runs OFF the main thread for smooth 60fps performance"
+          fallback: "Use GSAP ScrollTrigger for cross-browser support (recommended approach)"
+
+        view_transitions:
+          browser_support: "Chrome 111+, Edge 111+. Safari 18+. Limited in Firefox."
+          usage: |
+            Smooth animated transitions between gallery grid and lightbox views:
+            document.startViewTransition(() => { /* update DOM */ });
+            CSS: ::view-transition-old(image) { animation: fade-out 0.3s; }
+                 ::view-transition-new(image) { animation: fade-in 0.3s; }
+            Apply view-transition-name to images for individual element transitions.
+
+        css_grid_masonry:
+          browser_support: "EXPERIMENTAL — only Firefox Nightly with flag, Chrome behind flag"
+          usage: |
+            display: grid-lanes; /* New syntax as of 2025/2026 spec update */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            /* Items pack vertically into shortest column automatically */
+          status: "NOT ready for production. Use JavaScript-based masonry or CSS columns as fallback."
+          fallback_css_columns: |
+            .gallery { column-count: 3; column-gap: 1rem; }
+            .gallery-item { break-inside: avoid; margin-bottom: 1rem; }
+            Note: CSS columns flow top-to-bottom then left-to-right, not left-to-right then wrap.
+            For uniform 3:2 photos, standard CSS Grid is actually ideal — no masonry needed.
+
+        container_queries:
+          browser_support: "95%+ in modern browsers"
+          usage: "Allow gallery cards to respond to their container size, not viewport"
+
+    gsap_3:
+      recommendation: PRIMARY_ANIMATION
+      rationale: |
+        GSAP is the gold standard for web animation. ScrollTrigger is the most powerful
+        scroll-animation library available, offering features CSS alone cannot match:
+        pinning, scrubbing, snapping, velocity-based snapping, containerAnimation for
+        horizontal scroll sections, and rich callbacks.
+      cdn_urls:
+        core: "https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"
+        scrolltrigger: "https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"
+      installation: |
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+        <script>gsap.registerPlugin(ScrollTrigger);</script>
+      key_patterns_for_gallery:
+        hero_parallax: |
+          gsap.to('.hero-image', {
+            yPercent: -30,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.hero',
+              start: 'top top',
+              end: 'bottom top',
+              scrub: true
+            }
+          });
+
+        gallery_reveal: |
+          gsap.utils.toArray('.gallery-item').forEach((item, i) => {
+            gsap.from(item, {
+              opacity: 0,
+              y: 60,
+              scale: 0.9,
+              duration: 0.8,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: item,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+              }
+            });
+          });
+
+        staggered_batch_reveal: |
+          ScrollTrigger.batch('.gallery-item', {
+            onEnter: (batch) => gsap.to(batch, {
+              opacity: 1,
+              y: 0,
+              stagger: 0.1,
+              duration: 0.6,
+              ease: 'power2.out'
+            }),
+            start: 'top 90%'
+          });
+
+        pinned_showcase: |
+          let tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: '.showcase-section',
+              pin: true,
+              start: 'top top',
+              end: '+=3000',
+              scrub: 1,
+              snap: { snapTo: 1/38, duration: 0.3, ease: 'power1.inOut' }
+            }
+          });
+          tl.to('.showcase-track', { xPercent: -100 * (39 - 1) / 39, ease: 'none' });
+
+    alternatives_considered:
+      aos_library:
+        verdict: "NOT RECOMMENDED — GSAP ScrollTrigger is strictly superior"
+        rationale: "AOS is simpler but limited. GSAP provides scrubbing, pinning, batching, and more."
+
+      framer_motion:
+        verdict: "NOT APPLICABLE — React-only library"
+
+      anime_js:
+        verdict: "VIABLE ALTERNATIVE but less scroll support than GSAP"
+
+      css_only_animations:
+        verdict: "COMPLEMENT — Use for simple hover effects and transitions"
+        rationale: "CSS transitions/animations for hover states, focus states, and simple reveals"
+
+  # ----- SECTION 2: INNOVATIVE GALLERY UI PATTERNS -----
+  gallery_ui_patterns:
+    pattern_1_hero_section:
+      name: "Full-Viewport Cinematic Hero"
+      description: |
+        Full-screen opening with a single stunning photo of Mocha, overlaid with
+        the site title using a premium serif font. Subtle parallax on the image
+        as user scrolls. Animated scroll indicator (chevron or mouse icon) at bottom.
+      implementation:
+        - "100vh section with object-cover background image"
+        - "GSAP parallax: yPercent -30 on scrub"
+        - "Title with text-shadow or backdrop blur for readability"
+        - "Scroll indicator: CSS @keyframes bounce animation"
+        - "Optional: Ken Burns effect (slow zoom + pan via CSS animation)"
+      css_snippet: |
+        .hero {
+          height: 100vh;
+          position: relative;
+          overflow: hidden;
+        }
+        .hero-image {
+          width: 100%;
+          height: 120%; /* Extra height for parallax movement */
+          object-fit: cover;
+          position: absolute;
+          top: -10%;
+        }
+
+    pattern_2_horizontal_filmstrip:
+      name: "Scroll-Snap Horizontal Filmstrip"
+      description: |
+        A horizontal scrolling section with large photo cards. CSS scroll-snap
+        ensures each card centers perfectly. Works with touch/trackpad gestures natively.
+        Can be combined with GSAP pinning to convert vertical scroll into horizontal movement.
+      implementation:
+        - "overflow-x: auto with scroll-snap-type: x mandatory"
+        - "Each card: scroll-snap-align: center"
+        - "Hide scrollbar: scrollbar-width: none / ::-webkit-scrollbar { display: none }"
+        - "Optional navigation arrows and dot indicators"
+        - "GSAP containerAnimation for scroll-triggered events inside horizontal scroll"
+      two_approaches:
+        native_horizontal_scroll: |
+          Pros: Native touch/trackpad support, simple CSS, smooth performance
+          Cons: User must know to scroll horizontally (visual cues needed)
+          Best for: Touch devices, filmstrip sections
+        gsap_pinned_horizontal: |
+          Pros: Vertical scroll drives horizontal movement (intuitive), can pin the section
+          Cons: Requires GSAP, slightly more complex
+          Best for: Desktop, immersive experiences
+
+    pattern_3_masonry_grid:
+      name: "Responsive Photo Grid with Reveal Animations"
+      description: |
+        Since all photos are 3:2, a standard CSS Grid with uniform cells works perfectly.
+        Each cell reveals with a staggered animation as it enters the viewport.
+        Hover effects include scale-up, shadow, and optional caption reveal.
+      implementation:
+        - "CSS Grid: grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))"
+        - "aspect-ratio: 3/2 on each cell for consistent sizing"
+        - "GSAP ScrollTrigger.batch() for staggered reveal"
+        - "Hover: transform scale(1.05) + box-shadow + brightness adjustment"
+        - "Optional: varied span sizes (some photos span 2 columns) for visual interest"
+      layout_variations:
+        uniform_grid: "All same size — clean, modern, predictable"
+        mixed_grid: "Hero images span 2 cols, others 1 col — more dynamic"
+        css_columns: "Masonry-like vertical flow — good for varied heights (not needed here)"
+
+    pattern_4_lightbox:
+      name: "Full-Screen Immersive Lightbox"
+      description: |
+        Click any photo to expand to full-screen overlay. Smooth transition from
+        grid position to center screen using View Transition API or GSAP FLIP.
+        Navigation via keyboard arrows, swipe gestures, or clickable arrows.
+      implementation:
+        - "Overlay: position fixed, inset 0, z-index 50, bg-black/90"
+        - "Transition: View Transition API for morph effect (grid → fullscreen)"
+        - "Navigation: ArrowLeft/ArrowRight keyboard, touch swipe, click arrows"
+        - "Close: Escape key, click outside, X button"
+        - "Counter: '12 / 39' indicator"
+        - "Preload adjacent images for instant navigation"
+      gesture_support: |
+        Touch swipe detection with minimal JS:
+        let startX; const threshold = 50;
+        el.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        el.addEventListener('touchend', e => {
+          const diff = e.changedTouches[0].clientX - startX;
+          if (Math.abs(diff) > threshold) diff > 0 ? prev() : next();
+        });
+
+    pattern_5_scroll_storytelling:
+      name: "Scroll-Driven Photo Story"
+      description: |
+        Photos fade in and out as sections scroll, creating a narrative feel.
+        Each photo takes up most of the viewport with text overlays.
+        GSAP pinning holds each photo while a text animation plays.
+      implementation:
+        - "Each 'scene' is 200vh tall (100vh image pinned + 100vh scroll space)"
+        - "GSAP ScrollTrigger pin: true for each scene"
+        - "Cross-fade between scenes using opacity scrubbing"
+
+    pattern_6_interactive_hover_wall:
+      name: "Photo Wall with Interactive Hover Effects"
+      description: |
+        Dense grid of thumbnails. On hover, the photo scales up slightly while
+        adjacent photos dim/blur. Creates a spotlight effect.
+      implementation:
+        - "CSS: .gallery:hover .gallery-item:not(:hover) { opacity: 0.5; filter: blur(1px); }"
+        - "Transition on all items for smooth dim/undim"
+        - "Scale the hovered item: transform: scale(1.1); z-index: 10;"
+        - "Optional 3D tilt effect on hover using perspective and rotateX/Y"
+
+  # ----- SECTION 3: PERFORMANCE OPTIMIZATION -----
+  performance:
+    image_loading_strategy:
+      total_payload: "81MB raw — must NOT load all at once"
+      recommended_approach: |
+        1. GENERATE OPTIMIZED VARIANTS (build-time or pre-process):
+           - Thumbnail: 400px wide, quality 60%, ~20-40KB each → WebP format
+           - Medium: 800px wide, quality 75%, ~60-100KB each → WebP format
+           - Large: 1600px wide, quality 80%, ~150-250KB each → WebP format
+           - Full: Original 3088px for lightbox zoom (optional)
+           
+        2. If no build step (serving raw JPGs):
+           - Use native loading="lazy" on all images except first ~6
+           - Set explicit width and height attributes to prevent CLS
+           - Use fetchpriority="high" on hero/LCP image
+           - Rely on browser's intelligent prefetching
+
+      tool_for_optimization: |
+        # Generate WebP thumbnails with ImageMagick (pre-build step):
+        for f in *.JPG; do
+          convert "$f" -resize 400x -quality 60 -strip "thumbs/${f%.JPG}.webp"
+          convert "$f" -resize 800x -quality 75 -strip "medium/${f%.JPG}.webp"
+          convert "$f" -resize 1600x -quality 80 -strip "large/${f%.JPG}.webp"
+        done
+
+    lazy_loading:
+      native_html: |
+        <img src="photo.jpg" loading="lazy" width="3088" height="2056" alt="Mocha the dachshund">
+        
+        Rules:
+        - First 6-8 images (above fold): loading="eager" (default) + fetchpriority="high" for hero
+        - All other images: loading="lazy"
+        - ALWAYS set width and height attributes to prevent CLS
+        - Browser calculates distance threshold automatically (~1250px on 4G)
+
+      enhanced_blur_up_pattern: |
+        For premium feel, use a blur-up loading technique:
+        1. Inline a tiny (20px wide) base64 placeholder
+        2. Apply CSS filter: blur(20px) and transform: scale(1.1)
+        3. When full image loads, transition to sharp version
+        
+        <img
+          src="data:image/jpeg;base64,/9j/4AAQ..."  (tiny placeholder)
+          data-src="photo-medium.webp"
+          class="blur-up"
+          loading="lazy"
+        >
+        
+        CSS:
+        .blur-up { filter: blur(20px); transition: filter 0.5s; }
+        .blur-up.loaded { filter: blur(0); }
+
+      intersection_observer_enhanced: |
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+              img.src = img.dataset.src;
+              img.onload = () => img.classList.add('loaded');
+              observer.unobserve(img);
+            }
+          });
+        }, { rootMargin: '200px' });
+        
+        document.querySelectorAll('img[data-src]').forEach(img => observer.observe(img));
+
+    cls_prevention:
+      approach: |
+        - Set explicit width="3088" height="2056" on ALL img elements
+        - Use CSS aspect-ratio: 3/2 on containers
+        - Tailwind: class="aspect-[3/2]" on wrapper div
+        - This ensures space is reserved before images load
+
+    responsive_images:
+      approach: |
+        If serving multiple sizes:
+        <picture>
+          <source srcset="photo.webp" type="image/webp">
+          <source srcset="photo.jpg" type="image/jpeg">
+          <img src="photo.jpg" alt="Mocha" loading="lazy" width="3088" height="2056">
+        </picture>
+        
+        Or with srcset for resolution switching:
+        <img
+          srcset="photo-400.webp 400w, photo-800.webp 800w, photo-1600.webp 1600w"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          src="photo-800.webp"
+          alt="Mocha"
+          loading="lazy"
+        >
+
+    decoding:
+      approach: |
+        Use decoding="async" on all images to prevent blocking rendering:
+        <img src="photo.jpg" decoding="async" loading="lazy" ...>
+
+    preloading_critical:
+      approach: |
+        Preload the hero/LCP image in <head>:
+        <link rel="preload" as="image" href="hero-photo.jpg" fetchpriority="high">
+        This ensures the largest contentful paint image loads as fast as possible.
+
+  # ----- SECTION 4: DESIGN & AESTHETICS -----
+  design_aesthetics:
+    color_palette:
+      primary: |
+        Inspired by the subject (miniature dachshund named Mocha):
+        - Warm browns: #8B4513 (saddle brown), #D2691E (chocolate), #A0522D (sienna)
+        - Cream/ivory backgrounds: #FFF8DC (cornsilk), #FAEBD7 (antiquewhite), #FAF0E6 (linen)
+        - Dark accents: #2C1810 (dark espresso), #1A0F0A (near-black warm)
+        - Gold accents: #DAA520 (goldenrod) for highlights
+      dark_mode: |
+        - Background: #1A0F0A (warm near-black)
+        - Text: #FAF0E6 (linen)
+        - Accent: #DAA520 (goldenrod)
+        - Cards: #2C1810 with subtle border
+
+    typography:
+      recommendation: |
+        Google Fonts pairing:
+        - Headings: 'Playfair Display' (serif) — elegant, premium feel
+        - Body: 'Inter' or 'DM Sans' (sans-serif) — clean, modern
+        - Accent/captions: 'Cormorant Garamond' (serif italic) — refined
+        
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+    visual_effects:
+      premium_hover: |
+        .gallery-item {
+          transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .gallery-item:hover {
+          transform: scale(1.05) translateY(-4px);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .gallery:hover .gallery-item:not(:hover) {
+          opacity: 0.6;
+          filter: brightness(0.7);
+        }
+
+      parallax_hero: |
+        Multiple layers of parallax depth:
+        - Background layer: moves slow (yPercent: -20)
+        - Mid layer (photo): moves medium (yPercent: -30)
+        - Foreground (title): moves fast or stays fixed
+
+      text_reveal: |
+        GSAP SplitText-style effect for the title:
+        - Each letter animates from y: 100, opacity: 0
+        - Stagger: 0.03 seconds per character
+        - Ease: power4.out
+
+      gradient_overlays: |
+        On hero image for text readability:
+        background: linear-gradient(
+          to bottom,
+          rgba(0,0,0,0) 0%,
+          rgba(0,0,0,0.4) 60%,
+          rgba(0,0,0,0.8) 100%
+        );
+
+      micro_interactions: |
+        - Cursor changes to zoom icon on gallery items
+        - Subtle scale bounce on click (scale 0.95 → 1.0)
+        - Smooth scroll-to-section on nav link click
+        - Page load: staggered fade-in of UI elements
+
+    layout_principles:
+      - "Generous whitespace — let photos breathe"
+      - "Consistent 3:2 aspect ratio across all grid items"
+      - "Max content width ~1400px for readability, full-bleed for hero/showcase"
+      - "Responsive: 1 col mobile → 2 cols tablet → 3-4 cols desktop"
+      - "Section transitions: subtle background color shifts or divider elements"
+
+    inspiration_references:
+      - "Apple product pages: full-screen hero, scroll-driven reveals, pinned sections"
+      - "Unsplash.com: clean grid, instant lightbox, focus on photos"
+      - "National Geographic photo essays: scroll storytelling, full-bleed images"
+      - "Instagram web: uniform square grid (adapted to 3:2 rectangle grid)"
+
+  # ----- SECTION 5: RECOMMENDED IMPLEMENTATION APPROACH -----
+  recommended_implementation:
+    architecture: |
+      Single index.html file with embedded styles and scripts.
+      Optional: separate style.css and app.js files for organization.
+      No build step required — all dependencies via CDN.
+
+    html_structure: |
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mocha — A Miniature Dachshund Gallery</title>
+        <link rel="preload" as="image" href="IMG_9060.JPG" fetchpriority="high">
+        <link href="https://fonts.googleapis.com/css2?family=..." rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <style type="text/tailwindcss">/* custom theme */</style>
+      </head>
+      <body>
+        <section id="hero"><!-- Full-viewport hero --></section>
+        <section id="showcase"><!-- Horizontal filmstrip --></section>
+        <section id="gallery"><!-- Photo grid --></section>
+        <div id="lightbox"><!-- Modal overlay --></div>
+        <footer><!-- Credits --></footer>
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+        <script>/* App logic */</script>
+      </body>
+      </html>
+
+    critical_rendering_path: |
+      1. Browser loads HTML, encounters preload hint for hero image
+      2. Tailwind CDN loads and processes utility classes
+      3. Google Fonts load (with display=swap for FOUT prevention)
+      4. Hero image renders (LCP target: < 2.5s)
+      5. GSAP loads at bottom of body (non-blocking)
+      6. ScrollTrigger initializes, sets up all scroll animations
+      7. Lazy images load as user scrolls
+
+    browser_support_matrix:
+      core_features:
+        tailwind_css: "All modern browsers"
+        gsap_scrolltrigger: "All modern browsers + IE11"
+        loading_lazy: "Chrome 77+, Firefox 75+, Safari 15.4+, Edge 79+"
+        css_scroll_snap: "97%+ global support"
+        intersection_observer: "97%+ global support"
+      progressive_enhancement:
+        scroll_driven_animations: "Chrome 115+ only — use GSAP as primary, CSS as enhancement"
+        view_transitions: "Chrome 111+, Safari 18+ — use as enhancement, fallback to GSAP FLIP"
+        css_masonry: "Experimental only — use CSS Grid as primary layout"
+        container_queries: "95%+ — use as enhancement for card sizing"
+
+open_questions:
+  - question: "Should the site generate optimized image variants (WebP thumbnails) or serve raw JPGs?"
+    context: "81MB total payload is prohibitive for initial load. Generating WebP variants would reduce to ~5-10MB total for medium-quality thumbnails but requires a pre-processing step."
+
+  - question: "Should the horizontal showcase section use native CSS scroll-snap or GSAP pinned horizontal scroll?"
+    context: "Native scroll-snap is simpler and has great touch support. GSAP pinned horizontal converts vertical scroll to horizontal (feels more desktop-native). Could implement both with media queries."
+
+  - question: "Is dark mode a requirement or nice-to-have?"
+    context: "Dark backgrounds make photos pop more (cinema-like experience). Tailwind v4 supports dark mode natively. Many photo showcase sites default to dark mode."
+
+  - question: "Should photos have captions/descriptions or remain anonymous?"
+    context: "Current file names (IMG_9060.JPG) provide no metadata. Adding custom captions would require a data structure (JSON array or HTML data attributes). Could enhance the personal/storytelling feel."
+
+gaps:
+  - area: "Image optimization pipeline"
+    description: "No build step or image optimization is currently set up. Raw JPGs at 1.4-2.7MB each are too large for web delivery without optimization."
+    impact: "Without optimization, initial page load could exceed 20-30MB depending on how many images are above the fold. Core Web Vitals would fail LCP and total transfer size budgets."
+
+  - area: "Photo metadata and captions"
+    description: "No EXIF data was analyzed for orientation, camera settings, or timestamps beyond file dates. No semantic naming or captions exist."
+    impact: "Limits the ability to create a narrative/storytelling experience. Photos would appear as anonymous grid items without context."
+
+  - area: "Native CSS masonry support"
+    description: "CSS masonry (display: grid-lanes) is still experimental with minimal browser support. Cannot be relied upon for production."
+    impact: "Low impact for this project since all photos are uniform 3:2 — standard CSS Grid works perfectly. Masonry is more valuable for mixed-aspect-ratio collections."
+
+  - area: "Accessibility"
+    description: "No research conducted on accessibility requirements for photo galleries (alt text strategy, keyboard navigation patterns, screen reader announcements, reduced motion preferences)."
+    impact: "Should implement prefers-reduced-motion media query to disable animations, meaningful alt text, ARIA labels on lightbox controls, and focus management."
