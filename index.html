@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a0a0a">
   <title>Mocha — Miniature Dachshund</title>
 
   <!-- Preconnect for performance -->
@@ -122,7 +123,7 @@
       .masonry { column-count: 2; }
     }
     @media (max-width: 480px) {
-      .masonry { column-count: 1; }
+      .masonry { column-count: 1; column-gap: 0.75rem; }
     }
 
     .masonry-item {
@@ -144,6 +145,7 @@
     .gallery-img {
       display: block;
       width: 100%;
+      max-width: 100%;
       height: auto;
       border-radius: 0.5rem;
       transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
@@ -151,11 +153,18 @@
                   box-shadow 0.35s ease;
     }
 
-    .gallery-link:hover .gallery-img {
-      transform: scale(1.05);
-      filter: brightness(1.1);
-      box-shadow: 0 8px 32px rgba(212, 165, 116, 0.25),
-                  0 0 0 1px rgba(212, 165, 116, 0.10);
+    @media (hover: hover) and (pointer: fine) {
+      .gallery-link:hover .gallery-img {
+        transform: scale(1.05);
+        filter: brightness(1.1);
+        box-shadow: 0 8px 32px rgba(212, 165, 116, 0.25),
+                    0 0 0 1px rgba(212, 165, 116, 0.10);
+      }
+    }
+
+    .gallery-link:active .gallery-img {
+      transform: scale(0.98);
+      transition-duration: 0.1s;
     }
 
     /* ── Header ───────────────────────────────────────── */
@@ -188,6 +197,15 @@
       height: 2px;
       background: linear-gradient(90deg, transparent, #d4a574, transparent);
     }
+
+    /* Dynamic viewport height for mobile browsers */
+    @supports (min-height: 100dvh) {
+      #hero { min-height: 100dvh; }
+    }
+
+    @media (max-width: 640px) {
+      .hero-title { letter-spacing: 0.15em !important; }
+    }
   </style>
 </head>
 
@@ -196,7 +214,7 @@
   <!-- ════════════════════════════════════════════════════
        HEADER / NAVIGATION
        ════════════════════════════════════════════════════ -->
-  <header class="site-header fixed top-0 left-0 w-full z-50 py-4 px-6 md:px-10">
+  <header class="site-header fixed top-0 left-0 w-full z-50 py-3 sm:py-4 px-4 sm:px-6 md:px-10">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <a href="#" class="font-display text-xl md:text-2xl font-semibold tracking-wide text-mocha-gold hover:text-mocha-cream transition-colors duration-300">
         Mocha
@@ -212,19 +230,19 @@
   <!-- ════════════════════════════════════════════════════
        HERO SECTION
        ════════════════════════════════════════════════════ -->
-  <section id="hero" class="relative h-screen flex items-center justify-center overflow-hidden">
+  <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
     <!-- Parallax background -->
     <div class="hero-bg absolute inset-0 w-full h-[120%] -top-[10%]" id="heroBg"></div>
     <!-- Dark overlay -->
     <div class="hero-overlay absolute inset-0"></div>
 
     <!-- Hero content -->
-    <div class="relative z-10 text-center px-6">
-      <h1 class="hero-title font-display text-7xl sm:text-8xl md:text-9xl font-bold text-mocha-cream mb-4 select-none">
+    <div class="relative z-10 text-center px-4 sm:px-6 md:px-8">
+      <h1 class="hero-title font-display text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-bold text-mocha-cream mb-4 select-none">
         MOCHA
       </h1>
       <div class="gold-line mx-auto mb-6"></div>
-      <p class="hero-subtitle font-display text-lg sm:text-xl md:text-2xl font-light italic text-mocha-gold/90 tracking-wide">
+      <p class="hero-subtitle font-display text-base sm:text-lg md:text-xl lg:text-2xl font-light italic text-mocha-gold/90 tracking-wide">
         A Miniature Dachshund
       </p>
       <p class="hero-subtitle font-body text-sm text-mocha-muted mt-3 tracking-widest uppercase">
@@ -243,13 +261,13 @@
   <!-- ════════════════════════════════════════════════════
        GALLERY SECTION
        ════════════════════════════════════════════════════ -->
-  <section id="gallery" class="relative py-24 md:py-32 px-4 md:px-8">
+  <section id="gallery" class="relative py-16 sm:py-24 md:py-32 px-3 sm:px-4 md:px-8">
     <div class="max-w-7xl mx-auto">
 
       <!-- Section header -->
-      <div class="text-center mb-16 md:mb-20">
+      <div class="text-center mb-10 sm:mb-16 md:mb-20">
         <p class="text-mocha-gold text-sm font-medium tracking-[0.3em] uppercase mb-3">Gallery</p>
-        <h2 class="font-display text-4xl md:text-5xl font-semibold text-mocha-cream mb-4">Every Moment Counts</h2>
+        <h2 class="font-display text-2xl sm:text-3xl md:text-5xl font-semibold text-mocha-cream mb-4">Every Moment Counts</h2>
         <div class="gold-line mx-auto mt-4 mb-6"></div>
         <p class="text-mocha-muted text-base max-w-lg mx-auto">A collection of Mocha's most precious moments — from lazy afternoons to spirited adventures.</p>
       </div>
@@ -498,7 +516,7 @@
   <!-- ════════════════════════════════════════════════════
        FOOTER
        ════════════════════════════════════════════════════ -->
-  <footer class="border-t border-mocha-border py-12 px-6">
+  <footer class="border-t border-mocha-border py-8 sm:py-12 px-4 sm:px-6">
     <div class="max-w-7xl mx-auto text-center">
       <p class="font-body text-sm text-mocha-muted tracking-wide">
         Made with <span class="text-mocha-rose">❤️</span> for Mocha 🐾
@@ -528,18 +546,20 @@
     /* ── Register GSAP Plugins ───────────────────────── */
     gsap.registerPlugin(ScrollTrigger);
 
+    const isMobile = window.innerWidth < 640;
+
     /* ── Hero Animations ─────────────────────────────── */
     const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
     heroTl
       .to('.hero-title', {
         opacity: 1,
-        letterSpacing: '0.35em',
+        letterSpacing: isMobile ? '0.15em' : '0.35em',
         duration: 1.4,
         delay: 0.3,
       })
       .from('.hero-title', {
-        letterSpacing: '0.8em',
+        letterSpacing: isMobile ? '0.4em' : '0.8em',
         duration: 1.4,
       }, '<')
       .to('.hero-subtitle', {
