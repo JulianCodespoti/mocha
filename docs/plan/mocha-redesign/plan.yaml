@@ -1,0 +1,706 @@
+plan_id: mocha-redesign
+objective: |
+  Comprehensive Apple-inspired redesign of the Mocha miniature dachshund photo gallery website.
+  Implement 25 improvements across accessibility, visual design, animation, image optimization,
+  and micro-interactions while maintaining the single index.html architecture with CDN-loaded libraries.
+created_at: "2025-07-15"
+created_by: gem-planner
+status: pending_approval
+research_confidence: high
+
+tldr: |
+  Redesign the Mocha photo gallery in 5 sequential waves across 9 tasks. Wave 1 lays the foundation
+  with accessibility fixes, meta tags, content restructuring into themed sections, and unique alt texts.
+  Wave 2 adds visual depth via noise textures, glassmorphism, gradient complexity, featured images, and
+  a redesigned footer. Wave 3 overhauls all animations with text choreography, varied motion patterns,
+  bidirectional scroll, hero parallax interactivity, and a branded preloader. Wave 4 generates optimized
+  image assets (thumbnails + WebP) via ImageMagick and wires responsive <picture> elements with
+  placeholders. Wave 5 finishes with micro-interactions, scroll progress, focus styles, and scroll-snap.
+  All changes target a single index.html file (currently 641 lines) with one independent image-processing
+  task that can run in parallel.
+
+open_questions:
+  - Which specific photos should be assigned to which themed sections (Portraits, Adventures, Cozy Moments)? Implementer will need to make best-guess assignments based on filenames or leave placeholders for curator review.
+  - What OG preview image should be used? Recommend IMG_9060.JPG since it is already the hero background.
+  - Should light/dark mode toggle be full implementation or just prefers-color-scheme media query support?
+  - What social links should appear in the redesigned footer (Instagram, GitHub, personal site)?
+
+pre_mortem:
+  overall_risk_level: medium
+  critical_failure_modes:
+    - scenario: Single-file edits compound — a wave introduces a regression that breaks subsequent waves
+      likelihood: medium
+      impact: high
+      mitigation: Each wave task includes browser verification criteria. Run local preview after each wave before proceeding. Git commit after each successful wave.
+    - scenario: ImageMagick not available or produces unexpected output formats
+      likelihood: low
+      impact: medium
+      mitigation: Check ImageMagick availability first. Fall back to sharp-cli or manual placeholder approach if unavailable. WebP conversion is progressive enhancement.
+    - scenario: GSAP animation complexity causes jank on mobile devices
+      likelihood: medium
+      impact: medium
+      mitigation: Use will-change sparingly, prefer GPU-composited properties (transform, opacity). Add matchMedia checks to disable heavy animations on mobile. Test with Chrome DevTools throttling.
+    - scenario: CSS column masonry breaks when adding featured full-width images between sections
+      likelihood: medium
+      impact: high
+      mitigation: Use column-span or break the masonry into multiple grids per section. Test at all breakpoints (480, 768, 1280px).
+    - scenario: Responsive images with srcset/picture elements increase HTML size significantly for 39 images
+      likelihood: low
+      impact: low
+      mitigation: Keep markup concise. The HTML will grow but remain manageable for a single-file architecture.
+  assumptions:
+    - ImageMagick (convert/magick) is available on the system for thumbnail and WebP generation
+    - The 39 JPG images will remain in the repository root alongside index.html
+    - GitHub Pages deployment workflow uploads the entire repo root (confirmed from deploy.yml)
+    - CDN-hosted libraries (Tailwind, GSAP, GLightbox) remain stable at their current versions
+    - The user will manually curate photo assignments to sections if the default groupings are unsatisfactory
+    - No build step will be introduced — all assets must be pre-generated and committed
+
+implementation_specification:
+  code_structure: |
+    Single index.html file with three main sections — <style>, <body> HTML, and <script>.
+    Changes are organized by concern within each section. New CSS rules are appended to existing
+    style blocks by category (base, components, animations, utilities). HTML restructures the
+    gallery from a single masonry grid into themed sections with interstitial content. JavaScript
+    additions extend the existing GSAP timeline patterns. Image assets are organized into a
+    thumbs/ directory for thumbnails and webp/ directory for WebP conversions.
+  affected_areas:
+    - index.html <head> — meta tags, favicon, preconnects
+    - index.html <style> — new CSS for noise, glassmorphism, gradients, animations, focus styles, scroll-snap
+    - index.html <body> — hero section, gallery restructured into themed sections, footer redesign, preloader overlay
+    - index.html <script> — GSAP animations rewrite, preloader logic, mouse-tracking, micro-interactions
+    - /thumbs/ — generated thumbnail images (new directory)
+    - /webp/ — generated WebP images (new directory)
+  component_details:
+    - component: Preloader
+      responsibility: Show branded loading animation, wait for critical images, then choreograph page reveal
+      interfaces:
+        - "CSS animation keyframes for preloader spinner/logo"
+        - "JS window.addEventListener('load') to trigger reveal timeline"
+        - "GSAP timeline to fade out preloader and reveal hero"
+    - component: Themed Gallery Sections
+      responsibility: Organize 39 photos into 3-4 themed sections with interstitial text and featured breakout images
+      interfaces:
+        - "Section containers with unique IDs (portraits, adventures, cozy-moments)"
+        - "Full-width featured image slots breaking out of the masonry grid"
+        - "Interstitial text blocks between sections with section titles and descriptions"
+    - component: Animation System
+      responsibility: Provide varied scroll-triggered animations across sections with bidirectional behavior
+      interfaces:
+        - "GSAP ScrollTrigger instances per section with unique motion patterns"
+        - "Text split animation for hero title (character-level stagger)"
+        - "Mouse-tracking parallax on hero elements"
+        - "Scrub-based animations for key scroll positions"
+    - component: Image Optimization Pipeline
+      responsibility: Generate thumbnails and WebP versions of all 39 images via CLI tools
+      interfaces:
+        - "thumbs/ directory with resized JPGs (800px width)"
+        - "webp/ directory with WebP conversions of originals"
+        - "<picture> elements with srcset pointing to thumbs and webp"
+    - component: Visual Effects Layer
+      responsibility: Add noise texture, glassmorphism panels, gradient complexity, and depth effects
+      interfaces:
+        - "SVG noise filter overlay (CSS pseudo-element on body)"
+        - "Glassmorphism utility classes for panels (backdrop-filter + translucency)"
+        - "Gradient text utility for headings"
+        - "Radial gradient accents on section backgrounds"
+    - component: Micro-interaction System
+      responsibility: Add cursor effects, magnetic buttons, scroll progress, and focus styles
+      interfaces:
+        - "Custom cursor element following mouse position"
+        - "Scroll progress bar fixed at top of viewport"
+        - "CSS focus-visible styles for keyboard navigation"
+        - "CSS scroll-snap on main content sections"
+  dependencies:
+    - component: Preloader
+      relationship: Must load before hero animations start — hero timeline triggers after preloader completes
+    - component: Themed Gallery Sections
+      relationship: Provides the DOM structure that the Animation System targets with ScrollTrigger
+    - component: Animation System
+      relationship: Depends on Themed Gallery Sections for DOM targets and Preloader for sequencing
+    - component: Image Optimization Pipeline
+      relationship: Generates assets referenced by <picture> elements in Themed Gallery Sections
+    - component: Visual Effects Layer
+      relationship: CSS-only additions that layer on top of all other components
+    - component: Micro-interaction System
+      relationship: Adds JS event listeners to elements created by other components
+  integration_points:
+    - Hero section HTML restructured for text-split spans and parallax layers
+    - Gallery section split from single masonry div into multiple section containers
+    - GSAP script block expanded with new timeline orchestration and mouse-tracking
+    - Footer HTML completely replaced with structured multi-column layout
+    - Image src attributes updated to use <picture> with srcset after optimization
+
+contracts:
+  - from_task: W1-foundation
+    to_task: W2-visual-polish
+    interface: Restructured HTML with themed sections, updated Tailwind config colors, corrected contrast values, meta tags in head
+    format: Valid HTML with section IDs (portraits, adventures, cozy-moments) and updated mocha-muted color token
+  - from_task: W2-visual-polish
+    to_task: W3-animation-overhaul
+    interface: Finalized DOM structure with noise overlay, glassmorphism panels, featured images, and footer — stable selectors for animation targeting
+    format: CSS classes and element IDs that GSAP will reference (e.g., .section-header, .featured-image, .glass-panel)
+  - from_task: W3-animation-overhaul
+    to_task: W5-micro-interactions
+    interface: Complete animation system with preloader, text choreography, and scroll-triggered reveals already functioning
+    format: GSAP timelines and ScrollTrigger instances that micro-interactions layer on top of without conflict
+  - from_task: W4-image-gen
+    to_task: W4-responsive-images
+    interface: Generated image assets in thumbs/ and webp/ directories
+    format: "thumbs/{filename}.JPG at 800px width, webp/{filename}.webp at original size, both for all 39 images"
+
+tasks:
+  # ═══════════════════════════════════════════════════════
+  # WAVE 1 — Foundation
+  # ═══════════════════════════════════════════════════════
+  - id: W1-foundation
+    title: Foundation — Accessibility, Meta, Content Structure
+    description: |
+      Lay the structural foundation for the redesign by addressing critical accessibility
+      and SEO issues, then restructuring the gallery into themed sections.
+
+      Changes to implement:
+      1. WCAG Contrast Fix (#3): Change mocha-muted from #8a7e72 to #b0a090 (≥4.5:1 ratio
+         on #0a0a0a). Update both the Tailwind config and any inline usage.
+      2. Social Meta Tags (#14): Add Open Graph tags (og:title, og:description, og:image,
+         og:url, og:type) and Twitter Card tags (twitter:card, twitter:title, twitter:description,
+         twitter:image). Use IMG_9060.JPG as preview image with absolute URL
+         https://juliancodespoti.github.io/mocha/IMG_9060.JPG.
+      3. Favicon (#15): Add an inline SVG favicon using a data URI with a paw-print or
+         dachshund silhouette design in mocha-gold color. Use <link rel="icon" type="image/svg+xml">.
+      4. Remove Emoji (#13): Replace 🐾 with an inline SVG paw icon. Replace ❤️ with an
+         SVG heart or the word "love" styled in mocha-rose.
+      5. Unique Alt Texts (#16): Give each of the 39 images a unique, descriptive alt text.
+         Since we cannot see the images, use varied descriptive templates based on a dachshund's
+         typical poses and activities (e.g., "Mocha resting on a cozy blanket",
+         "Mocha exploring the garden", "Close-up portrait of Mocha's expressive eyes").
+         The user can refine these later.
+      6. Content Restructuring (#1): Split the single masonry grid into 3 themed sections —
+         "Portraits" (first ~13 images), "Adventures" (next ~13 images), "Cozy Moments"
+         (final ~13 images). Each section gets its own masonry grid, a section header with
+         title and description, and a decorative divider. Add interstitial text blocks between
+         sections with poetic copy about Mocha.
+      7. Navigation Update: Add nav links for each new section (Portraits, Adventures, Cozy Moments)
+         in the header, with smooth scroll behavior.
+    wave: 1
+    agent: gem-implementer
+    priority: high
+    status: pending
+    dependencies: []
+    context_files:
+      /home/domjules/Coding/mocha/index.html: Main file to edit — full single-file application (641 lines)
+    estimated_effort: large
+    estimated_files: 1
+    estimated_lines: 400
+    focus_area: HTML structure, head meta, accessibility, content organization
+    verification:
+      - Open index.html in browser — page renders without errors
+      - Verify 3 distinct gallery sections visible with headers and descriptions
+      - Check that nav links scroll to correct sections
+      - Inspect meta tags in page source (og and twitter)
+      - Verify no emoji characters remain in the HTML
+      - Check contrast of muted text color against background using browser dev tools
+      - Confirm all 39 images are still present and displayed
+      - Validate favicon appears in browser tab
+    acceptance_criteria:
+      - mocha-muted color updated to #b0a090 in Tailwind config and all CSS references
+      - Open Graph and Twitter Card meta tags present with correct content
+      - SVG favicon renders in browser tab
+      - All emoji replaced with SVG icons or styled text
+      - Each image has a unique alt text (no two identical)
+      - Gallery organized into 3 themed sections with headers, descriptions, and masonry grids
+      - Header navigation includes links to all sections
+      - All 39 images render correctly
+    failure_modes:
+      - scenario: CSS column masonry breaks when gallery is split into multiple containers
+        likelihood: medium
+        impact: high
+        mitigation: Each section gets its own masonry container with identical CSS rules. Test at all breakpoints.
+      - scenario: Smooth scroll offset miscalculated due to fixed header
+        likelihood: low
+        impact: low
+        mitigation: Add scroll-margin-top or scroll-padding-top to account for fixed header height.
+    tech_stack:
+      - HTML5 semantic elements
+      - Tailwind CSS (CDN)
+      - SVG inline icons
+    test_coverage: null
+    requires_review: false
+    review_depth: null
+    security_sensitive: false
+
+  # ═══════════════════════════════════════════════════════
+  # WAVE 2 — Visual Polish
+  # ═══════════════════════════════════════════════════════
+  - id: W2-visual-polish
+    title: Visual Polish — Textures, Depth, Gradients, Footer
+    description: |
+      Elevate the visual design with layered depth effects, complex gradients, and a
+      redesigned footer. This wave focuses purely on CSS and HTML additions.
+
+      Changes to implement:
+      1. Noise/Grain Texture (#9): Add a subtle SVG noise overlay on the body background
+         using a CSS ::after pseudo-element with an inline SVG filter (feTurbulence).
+         Set opacity to ~0.03-0.05 for organic depth without distraction. Use
+         pointer-events: none so it doesn't interfere with clicks.
+      2. Glassmorphism & Depth (#10): Add frosted-glass panels to section headers using
+         backdrop-filter: blur(16px) with semi-transparent backgrounds. Add subtle
+         resting shadows to gallery image cards. Create a .glass-panel utility class
+         for reuse.
+      3. Gradient Complexity (#11): Add radial gradient accents behind section headers
+         (subtle mocha-gold radial glow). Apply gradient text effect to section heading
+         titles using background-clip: text. Add animated gradient accent on the
+         gold-line dividers using CSS animation.
+      4. Footer Redesign (#17): Replace the single-line footer with a structured layout —
+         left column with "Mocha" branding and tagline, center with quick navigation
+         links, right with a "Made with love" credit line. Add copyright year. Remove
+         all emoji. Use SVG paw icon. Style with mocha color palette.
+      5. Featured Image Strategy (#18): Select 3 images (one per section) to display as
+         full-width cinematic breakout images that span outside the masonry grid. These
+         appear above each section's masonry grid as a hero-like banner with a subtle
+         parallax overlay and caption text. Use column-span: all or break out of masonry
+         by placing them before the masonry container in each section.
+    wave: 2
+    agent: gem-implementer
+    priority: high
+    status: pending
+    dependencies:
+      - W1-foundation
+    context_files:
+      /home/domjules/Coding/mocha/index.html: Updated file from Wave 1 with themed sections
+    estimated_effort: large
+    estimated_files: 1
+    estimated_lines: 350
+    focus_area: CSS visual effects, HTML footer, featured images
+    verification:
+      - Noise texture visible on dark background at close inspection (zoom in)
+      - Section headers show frosted glass effect with backdrop blur
+      - Gallery cards have subtle box-shadow on rest state
+      - Section headings display gradient text effect
+      - Gold-line dividers have subtle animated gradient
+      - Footer has multi-column layout with branding, navigation, and credits
+      - No emoji in footer
+      - 3 featured images display full-width above their respective sections
+      - Page remains fully responsive at 480, 768, 1280px breakpoints
+    acceptance_criteria:
+      - SVG noise overlay present on body with pointer-events none
+      - .glass-panel class defined and applied to section header containers
+      - At least 2 gradient effects visible (radial background accent + text gradient)
+      - Footer contains 3 columns/sections with proper copyright
+      - 3 featured breakout images render full-width with overlay and caption
+      - No visual regressions in gallery grid layout
+      - Mobile layout stacks footer columns vertically
+    failure_modes:
+      - scenario: Backdrop-filter not supported in older browsers causing invisible panels
+        likelihood: low
+        impact: medium
+        mitigation: Provide fallback solid semi-transparent background via @supports query
+      - scenario: SVG noise filter causes rendering performance issues on mobile
+        likelihood: low
+        impact: medium
+        mitigation: Use media query to disable noise overlay on screens < 768px
+    tech_stack:
+      - CSS backdrop-filter
+      - SVG feTurbulence filter
+      - CSS background-clip text
+      - CSS animation keyframes
+    test_coverage: null
+    requires_review: false
+    review_depth: null
+    security_sensitive: false
+
+  # ═══════════════════════════════════════════════════════
+  # WAVE 3 — Animation Overhaul
+  # ═══════════════════════════════════════════════════════
+  - id: W3-animation-overhaul
+    title: Animation Overhaul — Choreography, Variety, Interactivity
+    description: |
+      Completely overhaul the animation system with varied motion patterns, text choreography,
+      bidirectional scroll animations, hero interactivity, and a branded preloader.
+
+      Changes to implement:
+      1. Text Reveal Choreography (#12): Split the hero title "MOCHA" into individual
+         <span> elements per character. Animate each character with staggered GSAP reveals —
+         each character fades in, slides up, and slight rotation, with 0.08s stagger.
+         Replace the current letter-spacing animation with this character-level choreography.
+      2. Animation Variety (#6): Replace the uniform translateY(40px) + opacity animation
+         on masonry items with 4-5 distinct patterns assigned per section:
+         - Portraits section: scale-up from 0.85 + opacity (zoom-in feel)
+         - Adventures section: slide from alternating sides (odd from left, even from right) + opacity
+         - Cozy Moments section: blur-in (filter: blur(8px) → blur(0)) + opacity + subtle rotation
+         - Featured images: parallax-offset with scrub-based reveal
+         - Section headers: clip-path reveal (inset shrinking to full)
+      3. Bidirectional Scroll (#8): Change all ScrollTrigger toggleActions from
+         'play none none none' to 'play none none reverse' so animations reverse when
+         scrolling back up. Add scrub-based animations for featured images and section
+         dividers (scrub: 0.5).
+      4. Hero Interactivity (#7): Add mouse-tracking parallax on hero elements — title,
+         subtitle, and gold-line move slightly in response to mouse position with different
+         intensities (title: 2%, subtitle: 1.5%, line: 1%). Use requestAnimationFrame for
+         smooth tracking. Add ambient radial gradient that follows cursor on hero section.
+         On mobile, fall back to a gentle CSS animation (floating gradient).
+      5. Preloader (#4): Add a full-screen preloader overlay with the "MOCHA" text and a
+         paw-print SVG animation (draw-on effect using stroke-dasharray/dashoffset). On
+         window load, play a GSAP timeline that fades out the preloader, then triggers the
+         hero reveal sequence. Preloader background matches mocha-bg. Preloader element
+         gets display:none after animation completes.
+      6. Parallax Depth (#23): Add 2-3 decorative parallax layers in the hero section
+         (subtle gradient circles at different depths) that scroll at different rates via
+         GSAP ScrollTrigger scrub.
+    wave: 3
+    agent: gem-implementer
+    priority: high
+    status: pending
+    dependencies:
+      - W2-visual-polish
+    context_files:
+      /home/domjules/Coding/mocha/index.html: Updated file from Wave 2 with finalized DOM structure
+    estimated_effort: large
+    estimated_files: 1
+    estimated_lines: 450
+    focus_area: GSAP animations, ScrollTrigger, mouse tracking, preloader
+    verification:
+      - Preloader displays on initial load with paw-print animation, then fades to reveal hero
+      - Hero title letters animate in individually with stagger effect
+      - Moving mouse over hero section causes parallax movement of text elements
+      - Scrolling down reveals gallery items with varied animations per section
+      - Scrolling back up reverses the gallery item animations
+      - Featured images have parallax scrub effect
+      - No animation jank visible at 60fps (check via Chrome Performance tab)
+      - Mobile devices show simplified animations without mouse-tracking
+      - Preloader element is display:none after completion (not blocking interaction)
+    acceptance_criteria:
+      - Hero title split into character spans with GSAP stagger animation
+      - 3+ distinct animation patterns used across gallery sections
+      - All ScrollTrigger instances use bidirectional toggleActions or scrub
+      - Mouse-tracking parallax active on hero section (desktop only)
+      - Preloader with SVG animation plays on page load
+      - 2+ parallax depth layers in hero section
+      - matchMedia guard disables heavy animations on mobile (< 640px)
+      - All animations use transform/opacity for GPU compositing
+    failure_modes:
+      - scenario: Too many GSAP instances cause memory/performance issues
+        likelihood: medium
+        impact: high
+        mitigation: Use GSAP batch() for masonry items instead of individual instances. Limit parallax layers to 3. Use will-change judiciously.
+      - scenario: Preloader blocks content if JS fails to load
+        likelihood: low
+        impact: critical
+        mitigation: Add a CSS-only timeout fallback — preloader has max opacity animation of 5s that fades it regardless. Also add noscript style to hide preloader.
+      - scenario: Mouse-tracking parallax causes layout thrashing
+        likelihood: medium
+        impact: medium
+        mitigation: Use transform only (no layout-triggering properties). Debounce with requestAnimationFrame. Apply will-change to tracked elements.
+    tech_stack:
+      - GSAP 3.12.5 (ScrollTrigger)
+      - requestAnimationFrame
+      - CSS stroke-dasharray animation
+      - matchMedia API
+    test_coverage: null
+    requires_review: false
+    review_depth: null
+    security_sensitive: false
+
+  # ═══════════════════════════════════════════════════════
+  # WAVE 4 — Image Optimization (two tasks: generation + wiring)
+  # ═══════════════════════════════════════════════════════
+  - id: W4-image-gen
+    title: Generate Optimized Image Assets (Thumbnails + WebP)
+    description: |
+      Use ImageMagick CLI to generate optimized image assets for all 39 photos.
+      This task is independent of index.html editing and generates files only.
+
+      Steps:
+      1. Check ImageMagick availability (convert --version or magick --version).
+      2. Create thumbs/ directory in the repo root.
+      3. Create webp/ directory in the repo root.
+      4. For each of the 39 JPG files, generate:
+         - A thumbnail at 800px width (maintaining aspect ratio) in thumbs/
+           Command: magick {file} -resize 800x -quality 85 thumbs/{file}
+         - A WebP conversion at original size in webp/
+           Command: magick {file} -quality 82 webp/{basename}.webp
+      5. Verify all 78 files were generated (39 thumbs + 39 webp).
+      6. Report file size savings.
+
+      Image list (39 files):
+      IMG_9060.JPG, IMG_9061.JPG, IMG_9064.JPG, IMG_9066.JPG, IMG_9067.JPG,
+      IMG_9068.JPG, IMG_9070.JPG, IMG_9071.JPG, IMG_9073.JPG, IMG_9074.JPG,
+      IMG_9075.JPG, IMG_9076.JPG, IMG_9077.JPG, IMG_9078.JPG, IMG_9081.JPG,
+      IMG_9083.JPG, IMG_9084.JPG, IMG_9087.JPG, IMG_9089.JPG, IMG_9090.JPG,
+      IMG_9091.JPG, IMG_9094.JPG, IMG_9095.JPG, IMG_9096.JPG, IMG_9097.JPG,
+      IMG_9104.JPG, IMG_9108.JPG, IMG_9114.JPG, IMG_9115.JPG, IMG_9125.JPG,
+      IMG_9127.JPG, IMG_9131.JPG, IMG_9136.JPG, IMG_9139.JPG, IMG_9140.JPG,
+      IMG_9141.JPG, IMG_9145.JPG, IMG_9146.JPG, IMG_9148.JPG
+    wave: 4
+    agent: gem-devops
+    priority: high
+    status: pending
+    dependencies:
+      - W1-foundation
+    context_files:
+      /home/domjules/Coding/mocha/: Repository root containing all 39 JPG files
+    estimated_effort: medium
+    estimated_files: 2
+    estimated_lines: 0
+    focus_area: Image processing, asset generation
+    verification:
+      - thumbs/ directory exists with 39 JPG files
+      - webp/ directory exists with 39 .webp files
+      - Thumbnail files are smaller than originals
+      - WebP files are valid (can be opened in a browser)
+      - No original images were modified or deleted
+    acceptance_criteria:
+      - 39 thumbnail JPGs at 800px width in thumbs/
+      - 39 WebP files in webp/
+      - All generated files are valid images (non-zero size, correct format)
+      - Original 39 JPGs untouched
+    failure_modes:
+      - scenario: ImageMagick not installed or lacks WebP delegate
+        likelihood: medium
+        impact: high
+        mitigation: Check for magick/convert first. If WebP delegate missing, try cwebp as fallback. If no tools available, skip WebP and generate thumbnails only.
+    environment: development
+    requires_approval: false
+    security_sensitive: false
+
+  - id: W4-responsive-images
+    title: Wire Responsive Images with Placeholders
+    description: |
+      Update index.html to use responsive image markup and add visual placeholders
+      to prevent layout shift during loading.
+
+      Changes to implement:
+      1. Responsive Images (#2): Replace each <img> tag with a <picture> element containing:
+         - <source srcset="webp/{name}.webp" type="image/webp">
+         - <source srcset="thumbs/{name}.JPG" type="image/jpeg">
+         - <img src="thumbs/{name}.JPG" ...> as fallback
+         Update the GLightbox <a href> to still point to original full-size JPGs for the lightbox view.
+      2. Image Placeholders (#5): Add a dominant-color background placeholder to each
+         image container using a warm brown/amber CSS background color (e.g., #3d2e1f)
+         with aspect-ratio reservation. Use style="aspect-ratio: 3/4; background: #3d2e1f"
+         on image containers (since we can't extract actual dominant colors without a
+         build tool, use a consistent warm placeholder that matches the mocha aesthetic).
+         Add transition on image opacity to fade in when loaded.
+      3. Image load fade-in: Add an onload handler or CSS technique to fade images in
+         when they finish loading. Set initial opacity: 0 on images, then transition
+         to opacity: 1 on load.
+    wave: 4
+    agent: gem-implementer
+    priority: high
+    status: pending
+    dependencies:
+      - W3-animation-overhaul
+      - W4-image-gen
+    context_files:
+      /home/domjules/Coding/mocha/index.html: Updated file from Wave 3 with final animations
+      /home/domjules/Coding/mocha/thumbs/: Generated thumbnails from W4-image-gen
+      /home/domjules/Coding/mocha/webp/: Generated WebP files from W4-image-gen
+    estimated_effort: large
+    estimated_files: 1
+    estimated_lines: 400
+    focus_area: Responsive images, picture elements, layout shift prevention
+    verification:
+      - All 39 images use <picture> elements with WebP and JPEG sources
+      - Placeholder backgrounds visible before images load (throttle network in DevTools)
+      - No layout shift when images load (check CLS in Lighthouse)
+      - GLightbox still opens full-size original JPGs
+      - Images fade in smoothly when loaded
+      - Page works in browsers without WebP support (falls back to JPEG thumbnails)
+    acceptance_criteria:
+      - Every image wrapped in <picture> with webp and jpeg sources
+      - Thumbnail (800px) used as default src, original used for lightbox href
+      - Warm placeholder background visible during image loading
+      - aspect-ratio set on image containers to reserve space
+      - Images fade in on load (opacity transition)
+      - GLightbox still functions correctly with full-size images
+    failure_modes:
+      - scenario: GLightbox breaks with <picture> element nesting inside <a> tag
+        likelihood: medium
+        impact: high
+        mitigation: Test GLightbox compatibility with <picture>. If broken, keep <img> with srcset attribute instead of <picture> element.
+    tech_stack:
+      - HTML5 <picture> element
+      - srcset attribute
+      - CSS aspect-ratio
+      - CSS opacity transition
+    test_coverage: null
+    requires_review: false
+    review_depth: null
+    security_sensitive: false
+
+  # ═══════════════════════════════════════════════════════
+  # WAVE 5 — Micro-interactions & Finishing Touches
+  # ═══════════════════════════════════════════════════════
+  - id: W5-micro-interactions
+    title: Micro-interactions, Scroll Progress, Focus Styles, Scroll-Snap
+    description: |
+      Add finishing touches that elevate the user experience with subtle interactive details.
+
+      Changes to implement:
+      1. Scroll Progress Indicator (#20): Add a thin (3px) progress bar fixed at the very
+         top of the viewport (above the header, z-index: 60). Color it with a gradient from
+         mocha-gold to mocha-rose. Width driven by scroll position (0% at top, 100% at
+         bottom). Use GSAP ScrollTrigger or a simple scroll event listener.
+      2. Custom Focus Styles (#22): Add visible :focus-visible styles for all interactive
+         elements (links, buttons). Use a 2px mocha-gold outline with 2px offset on dark
+         background. Style specifically: header links, nav links, gallery links, footer links.
+         Ensure focus ring is clearly visible against #0a0a0a background.
+      3. Micro-interactions (#19): Add magnetic hover effect on the header "Mocha" logo —
+         text subtly moves toward the cursor when hovering nearby (10px range). Add a gentle
+         glow effect on gallery image hover (radial gradient pseudo-element). Add a subtle
+         ripple effect on gallery link click (CSS animation with a pseudo-element).
+      4. Scroll-Snap Sections (#25): Add scroll-snap-type: y proximity on the html/body
+         element. Add scroll-snap-align: start on each major section (hero, each gallery
+         section). Use proximity mode so it doesn't feel forced. Only enable on screens
+         > 768px to avoid interfering with mobile scrolling.
+      5. Variable Font Weight Animation (#24): Add GSAP ScrollTrigger animation on section
+         headings that tweens font-weight from 400 to 700 as the heading scrolls through
+         the viewport. This requires font-variation-settings or just fontWeight tween with
+         Inter (which is a variable font on Google Fonts).
+    wave: 5
+    agent: gem-implementer
+    priority: medium
+    status: pending
+    dependencies:
+      - W4-responsive-images
+    context_files:
+      /home/domjules/Coding/mocha/index.html: Updated file from Wave 4 with responsive images
+    estimated_effort: medium
+    estimated_files: 1
+    estimated_lines: 250
+    focus_area: UX polish, accessibility, scroll behavior
+    verification:
+      - Scroll progress bar visible at top of page and tracks scroll position accurately
+      - Tab key navigation shows visible gold focus rings on all interactive elements
+      - Hovering near the Mocha logo causes subtle magnetic pull effect
+      - Gallery images show glow effect on hover
+      - Clicking a gallery image shows brief ripple effect
+      - Scroll-snap engages between sections on desktop (> 768px)
+      - Section headings animate font-weight on scroll
+      - All effects degrade gracefully on mobile
+    acceptance_criteria:
+      - Scroll progress bar present, styled with gold-to-rose gradient, tracks scroll 0-100%
+      - :focus-visible styles applied to all interactive elements with mocha-gold outline
+      - At least 2 micro-interactions implemented (magnetic hover + gallery glow)
+      - scroll-snap-type set with proximity mode on desktop only
+      - Variable font weight animation on at least section headings
+      - No performance regressions (smooth 60fps scrolling)
+    failure_modes:
+      - scenario: Scroll-snap interferes with GSAP ScrollTrigger calculations
+        likelihood: medium
+        impact: medium
+        mitigation: Test interaction between scroll-snap and ScrollTrigger. If conflicting, disable scroll-snap or use very loose proximity threshold.
+      - scenario: Variable font weight tween not visible with Inter font
+        likelihood: low
+        impact: low
+        mitigation: Verify Inter is loaded as a variable font (wght axis). If not, update Google Fonts URL to request variable version.
+    tech_stack:
+      - CSS scroll-snap
+      - CSS :focus-visible
+      - GSAP ScrollTrigger
+      - requestAnimationFrame for magnetic effect
+    test_coverage: null
+    requires_review: false
+    review_depth: null
+    security_sensitive: false
+
+  # ═══════════════════════════════════════════════════════
+  # WAVE 5 — Final Review
+  # ═══════════════════════════════════════════════════════
+  - id: W5-review
+    title: Final Security and Quality Review
+    description: |
+      Comprehensive review of the completed redesign covering code quality, security,
+      accessibility, and performance.
+
+      Review scope:
+      1. Security: Verify no external resources loaded over HTTP (all HTTPS). Check that
+         inline SVGs don't contain script elements. Verify no user-input-dependent code
+         (XSS vectors). Check Content Security Policy compatibility.
+      2. Accessibility: Run through WCAG 2.1 AA checklist — contrast ratios, alt texts,
+         focus management, keyboard navigation, screen reader compatibility.
+         Verify preloader doesn't trap focus. Check aria-labels on icon-only elements.
+      3. Performance: Check for excessive DOM nodes, oversized images in initial load,
+         render-blocking resources, unused CSS. Verify lazy loading on below-fold images.
+         Check that preloader doesn't delay interactive time unnecessarily.
+      4. Code quality: Validate HTML structure (no unclosed tags, proper nesting).
+         Check CSS for dead rules. Verify GSAP cleanup (no memory leaks from ScrollTrigger).
+         Check mobile responsiveness at all breakpoints.
+      5. Cross-browser: Verify fallbacks for backdrop-filter, CSS aspect-ratio,
+         scroll-snap, :focus-visible.
+    wave: 5
+    agent: gem-reviewer
+    priority: high
+    status: pending
+    dependencies:
+      - W5-micro-interactions
+    context_files:
+      /home/domjules/Coding/mocha/index.html: Final redesigned file
+      /home/domjules/Coding/mocha/.github/workflows/deploy.yml: Deployment workflow
+    estimated_effort: medium
+    estimated_files: 1
+    estimated_lines: 0
+    focus_area: Security, accessibility, performance, code quality
+    verification:
+      - Review report generated with findings categorized by severity
+      - All critical and high findings addressed or documented
+      - No security vulnerabilities identified
+    acceptance_criteria:
+      - Zero critical security findings
+      - WCAG 2.1 AA contrast requirements met
+      - All images have unique descriptive alt texts
+      - Focus management works correctly with preloader
+      - No render-blocking issues in critical path
+      - HTML validates without structural errors
+    requires_review: true
+    review_depth: full
+    security_sensitive: true
+
+  # ═══════════════════════════════════════════════════════
+  # WAVE 5 — Documentation
+  # ═══════════════════════════════════════════════════════
+  - id: W5-docs
+    title: Project Walkthrough Documentation
+    description: |
+      Document the completed redesign with a project walkthrough covering all changes made,
+      architecture decisions, and maintenance guide.
+
+      Coverage:
+      1. Overview of the 25 improvements implemented across 5 waves
+      2. Architecture decisions (single-file constraint, CDN dependencies, image optimization strategy)
+      3. How to update/add images (image processing commands, required markup)
+      4. Animation system guide (GSAP patterns used, how to modify)
+      5. Accessibility features and how to maintain them
+      6. Performance optimizations and their rationale
+      7. Known limitations and future improvement ideas
+    wave: 5
+    agent: gem-documentation-writer
+    priority: low
+    status: pending
+    dependencies:
+      - W5-review
+    context_files:
+      /home/domjules/Coding/mocha/index.html: Final redesigned file
+      /home/domjules/Coding/mocha/docs/plan/mocha-redesign/plan.yaml: Implementation plan for reference
+    estimated_effort: medium
+    estimated_files: 1
+    estimated_lines: 200
+    focus_area: Technical documentation, maintenance guide
+    task_type: walkthrough
+    audience: developers
+    coverage_matrix:
+      - Project overview and objectives achieved
+      - Wave-by-wave implementation summary
+      - Image management workflow
+      - Animation system documentation
+      - Accessibility compliance notes
+      - Deployment and maintenance guide
+    verification:
+      - Documentation covers all 5 waves
+      - Image management instructions are clear and actionable
+      - No references to removed or changed features
+    acceptance_criteria:
+      - Walkthrough document created at docs/REDESIGN.md
+      - All 25 improvements referenced with their implementation status
+      - Clear instructions for adding new images
+      - Animation system explained with examples

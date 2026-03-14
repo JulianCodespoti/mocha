@@ -6,6 +6,20 @@
   <meta name="theme-color" content="#0a0a0a">
   <title>Mocha — Miniature Dachshund</title>
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='65' rx='22' ry='28' fill='%23d4a574'/%3E%3Ccircle cx='28' cy='35' r='12' fill='%23d4a574'/%3E%3Ccircle cx='72' cy='35' r='12' fill='%23d4a574'/%3E%3Ccircle cx='18' cy='55' r='10' fill='%23d4a574'/%3E%3Ccircle cx='82' cy='55' r='10' fill='%23d4a574'/%3E%3C/svg%3E">
+
+  <!-- Open Graph / Social Meta -->
+  <meta property="og:title" content="Mocha — A Miniature Dachshund Gallery">
+  <meta property="og:description" content="A curated photo gallery celebrating Mocha, the miniature dachshund">
+  <meta property="og:image" content="https://juliancodespoti.github.io/mocha/IMG_9060.JPG">
+  <meta property="og:url" content="https://juliancodespoti.github.io/mocha/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Mocha — A Miniature Dachshund Gallery">
+  <meta name="twitter:description" content="A curated photo gallery celebrating Mocha, the miniature dachshund">
+  <meta name="twitter:image" content="https://juliancodespoti.github.io/mocha/IMG_9060.JPG">
+
   <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +30,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
 
   <!-- GLightbox CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -31,7 +45,7 @@
               cream: '#faf5ef',
               gold: '#d4a574',
               rose: '#c88b8b',
-              muted: '#8a7e72',
+              muted: '#b0a090',
               border: '#2a2520',
             }
           },
@@ -71,6 +85,8 @@
     html {
       scrollbar-width: thin;
       scrollbar-color: #d4a574 #0a0a0a;
+      scroll-behavior: smooth;
+      scroll-snap-type: y proximity;
     }
 
     /* ── Hero ─────────────────────────────────────────── */
@@ -94,11 +110,20 @@
 
     /* ── Title Animation ──────────────────────────────── */
     .hero-title {
-      letter-spacing: 0.35em;
-      opacity: 0;
+      letter-spacing: 0.25em;
     }
 
     .hero-subtitle {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .hero-gold-line {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    .hero-scroll-hint {
       opacity: 0;
     }
 
@@ -112,25 +137,99 @@
     }
 
     /* ── Masonry Grid ─────────────────────────────────── */
-    .masonry {
+    .masonry-grid {
       column-count: 4;
       column-gap: 1rem;
     }
     @media (max-width: 1280px) {
-      .masonry { column-count: 3; }
+      .masonry-grid { column-count: 3; }
     }
     @media (max-width: 768px) {
-      .masonry { column-count: 2; }
+      .masonry-grid { column-count: 2; }
     }
     @media (max-width: 480px) {
-      .masonry { column-count: 1; column-gap: 0.75rem; }
+      .masonry-grid { column-count: 1; column-gap: 0.75rem; }
+    }
+
+    /* ── Section Headers ─────────────────────────────── */
+    .section-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    @media (min-width: 640px) {
+      .section-header { margin-bottom: 4rem; }
+    }
+    @media (min-width: 768px) {
+      .section-header { margin-bottom: 5rem; }
+    }
+    .section-label {
+      display: block;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #d4a574;
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: #faf5ef;
+      margin-bottom: 1rem;
+    }
+    @media (min-width: 640px) {
+      .section-title { font-size: 2.5rem; }
+    }
+    @media (min-width: 768px) {
+      .section-title { font-size: 3.5rem; }
+    }
+    .section-description {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 1rem;
+      color: #b0a090;
+      max-width: 32rem;
+      margin: 0 auto 1.5rem;
+    }
+
+    /* ── Interstitial ────────────────────────────────── */
+    .interstitial {
+      padding: 4rem 1.5rem;
+      text-align: center;
+    }
+    @media (min-width: 640px) {
+      .interstitial { padding: 6rem 2rem; }
+    }
+    @media (min-width: 768px) {
+      .interstitial { padding: 8rem 2rem; }
+    }
+    .interstitial p {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      font-size: 1.25rem;
+      color: rgba(250, 245, 239, 0.5);
+      max-width: 36rem;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+    @media (min-width: 640px) {
+      .interstitial p { font-size: 1.5rem; }
+    }
+    @media (min-width: 768px) {
+      .interstitial p { font-size: 1.75rem; }
+    }
+
+    /* ── Gallery Section Scroll Margin ───────────────── */
+    #portraits,
+    #adventures,
+    #cozy-moments {
+      scroll-margin-top: 80px;
     }
 
     .masonry-item {
       break-inside: avoid;
       margin-bottom: 1rem;
-      opacity: 0;
-      transform: translateY(40px);
     }
 
     /* ── Gallery Image Styles ─────────────────────────── */
@@ -193,9 +292,10 @@
 
     /* ── Decorative divider ───────────────────────────── */
     .gold-line {
-      width: 60px;
       height: 2px;
-      background: linear-gradient(90deg, transparent, #d4a574, transparent);
+      background: linear-gradient(90deg, transparent, #d4a574, #c88b8b, #d4a574, transparent);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
     }
 
     /* Dynamic viewport height for mobile browsers */
@@ -206,10 +306,204 @@
     @media (max-width: 640px) {
       .hero-title { letter-spacing: 0.15em !important; }
     }
+
+    /* ── Preloader ────────────────────────────────────── */
+    .preloader-paw ellipse,
+    .preloader-paw circle {
+      stroke-dasharray: 200;
+      stroke-dashoffset: 200;
+      animation: drawPaw 2s ease forwards;
+      fill: none;
+    }
+    .preloader-paw circle:nth-child(2) { animation-delay: 0.15s; }
+    .preloader-paw circle:nth-child(3) { animation-delay: 0.3s; }
+    .preloader-paw circle:nth-child(4) { animation-delay: 0.45s; }
+    .preloader-paw circle:nth-child(5) { animation-delay: 0.6s; }
+
+    @keyframes drawPaw {
+      to {
+        stroke-dashoffset: 0;
+        fill: currentColor;
+      }
+    }
+
+    /* CSS-only safety timeout — preloader fades after 5s regardless */
+    #preloader {
+      animation: preloaderFallback 0.6s ease 5s forwards;
+    }
+    @keyframes preloaderFallback {
+      to { opacity: 0; pointer-events: none; }
+    }
+
+    /* ── Mobile Hero Glow ─────────────────────────────── */
+    @media (max-width: 639px) {
+      .hero-glow {
+        background: radial-gradient(circle at 50% 50%, rgba(212,165,116,0.05), transparent 60%);
+        animation: floatGlow 6s ease-in-out infinite alternate;
+      }
+      @keyframes floatGlow {
+        0% { transform: translate(-10%, -10%); }
+        100% { transform: translate(10%, 10%); }
+      }
+    }
+
+    /* ── Noise/Grain Texture ───────────────────────────── */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+    @media (max-width: 768px) {
+      body::after { display: none; }
+    }
+
+    /* ── Glass Panel ───────────────────────────────────── */
+    .glass-panel {
+      background: rgba(20, 18, 16, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(212, 165, 116, 0.08);
+      border-radius: 1rem;
+      padding: 2rem 2.5rem;
+    }
+    @supports not (backdrop-filter: blur(16px)) {
+      .glass-panel {
+        background: rgba(20, 18, 16, 0.92);
+      }
+    }
+
+    /* ── Gallery Item Shadows ──────────────────────────── */
+    .masonry-grid .gallery-item {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    /* ── Gradient Section Titles ──────────────────────── */
+    .section-title {
+      background: linear-gradient(135deg, #faf5ef 0%, #d4a574 50%, #c88b8b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Radial Glow Behind Sections ─────────────────── */
+    section[id] { position: relative; }
+    section[id]::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse at center, rgba(212, 165, 116, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Shimmer Animation ───────────────────────────── */
+    @keyframes shimmer {
+      0%, 100% { background-position: -100% 0; }
+      50% { background-position: 100% 0; }
+    }
+
+    /* ── Featured Image ──────────────────────────────── */
+    .featured-image {
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+    }
+    .featured-image img {
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .featured-image:hover img {
+      transform: scale(1.03);
+    }
+
+    /* ── Responsive Image Placeholders ──────────────── */
+    .gallery-img {
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      background: #1a1815;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .featured-img {
+      aspect-ratio: 21/9;
+      background: #1a1815;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    /* ── Scroll Progress Bar ──────────────────────────── */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #d4a574, #c88b8b);
+      z-index: 9999;
+      width: 0%;
+      transition: none;
+    }
+
+    /* ── Focus-Visible Accessibility ──────────────────── */
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid #d4a574;
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    /* ── Gallery Item Hover Glow ──────────────────────── */
+    @media (hover: hover) {
+      .gallery-item a {
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+      }
+      .gallery-item a:hover {
+        box-shadow: 0 0 25px rgba(212, 165, 116, 0.2), 0 8px 32px rgba(0,0,0,0.4);
+      }
+    }
+
+    /* ── Scroll Snap for Sections ─────────────────────── */
+    section[id] {
+      scroll-snap-align: start;
+    }
+
+    /* ── Zoom Cursor for Gallery ──────────────────────── */
+    .gallery-item a, .featured-image a {
+      cursor: zoom-in;
+    }
   </style>
+
+  <noscript><style>#preloader { display: none; }</style></noscript>
 </head>
 
 <body class="bg-mocha-bg text-mocha-cream font-body antialiased">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- ════════════════════════════════════════════════════
+       PRELOADER
+       ════════════════════════════════════════════════════ -->
+  <div id="preloader" class="fixed inset-0 z-[100] bg-mocha-bg flex items-center justify-center flex-col">
+    <div class="preloader-content text-center">
+      <h1 class="font-display text-5xl sm:text-7xl text-mocha-cream mb-6 preloader-title" style="letter-spacing: 0.3em;">MOCHA</h1>
+      <svg class="preloader-paw w-12 h-12 text-mocha-gold mx-auto" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3">
+        <ellipse cx="50" cy="65" rx="22" ry="28"/>
+        <circle cx="28" cy="35" r="12"/>
+        <circle cx="72" cy="35" r="12"/>
+        <circle cx="18" cy="55" r="10"/>
+        <circle cx="82" cy="55" r="10"/>
+      </svg>
+    </div>
+  </div>
 
   <!-- ════════════════════════════════════════════════════
        HEADER / NAVIGATION
@@ -219,9 +513,15 @@
       <a href="#" class="font-display text-xl md:text-2xl font-semibold tracking-wide text-mocha-gold hover:text-mocha-cream transition-colors duration-300">
         Mocha
       </a>
-      <nav class="flex items-center gap-6">
-        <a href="#gallery" class="text-sm font-medium tracking-widest uppercase text-mocha-cream/70 hover:text-mocha-gold transition-colors duration-300">
-          Gallery
+      <nav aria-label="Primary" class="flex items-center gap-4 sm:gap-6">
+        <a href="#portraits" class="text-sm font-medium tracking-widest uppercase text-mocha-cream/70 hover:text-mocha-gold transition-colors duration-300">
+          Portraits
+        </a>
+        <a href="#adventures" class="text-sm font-medium tracking-widest uppercase text-mocha-cream/70 hover:text-mocha-gold transition-colors duration-300">
+          Adventures
+        </a>
+        <a href="#cozy-moments" class="text-sm font-medium tracking-widest uppercase text-mocha-cream/70 hover:text-mocha-gold transition-colors duration-300">
+          Cozy
         </a>
       </nav>
     </div>
@@ -230,297 +530,531 @@
   <!-- ════════════════════════════════════════════════════
        HERO SECTION
        ════════════════════════════════════════════════════ -->
-  <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <section id="hero" class="hero-section relative min-h-screen flex items-center justify-center overflow-hidden">
     <!-- Parallax background -->
     <div class="hero-bg absolute inset-0 w-full h-[120%] -top-[10%]" id="heroBg"></div>
     <!-- Dark overlay -->
     <div class="hero-overlay absolute inset-0"></div>
 
+    <!-- Parallax depth layers -->
+    <div class="parallax-layer absolute inset-0 pointer-events-none">
+      <div class="parallax-circle-1 absolute w-96 h-96 rounded-full opacity-[0.03]" style="background: radial-gradient(circle, #d4a574, transparent 70%); top: 10%; left: -10%;"></div>
+      <div class="parallax-circle-2 absolute w-72 h-72 rounded-full opacity-[0.04]" style="background: radial-gradient(circle, #c88b8b, transparent 70%); bottom: 20%; right: -5%;"></div>
+      <div class="parallax-circle-3 absolute w-48 h-48 rounded-full opacity-[0.03]" style="background: radial-gradient(circle, #d4a574, transparent 70%); top: 40%; right: 30%;"></div>
+    </div>
+
+    <!-- Ambient glow -->
+    <div class="hero-glow absolute inset-0 pointer-events-none opacity-30" style="z-index: 1;"></div>
+
     <!-- Hero content -->
     <div class="relative z-10 text-center px-4 sm:px-6 md:px-8">
-      <h1 class="hero-title font-display text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-bold text-mocha-cream mb-4 select-none">
-        MOCHA
+      <h1 class="hero-title font-display text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-mocha-cream" style="letter-spacing: 0.25em; overflow: hidden;">
+        <span class="char" style="display: inline-block; opacity: 0; transform: translateY(100%);">M</span>
+        <span class="char" style="display: inline-block; opacity: 0; transform: translateY(100%);">O</span>
+        <span class="char" style="display: inline-block; opacity: 0; transform: translateY(100%);">C</span>
+        <span class="char" style="display: inline-block; opacity: 0; transform: translateY(100%);">H</span>
+        <span class="char" style="display: inline-block; opacity: 0; transform: translateY(100%);">A</span>
       </h1>
-      <div class="gold-line mx-auto mb-6"></div>
+      <div class="gold-line hero-gold-line w-24 sm:w-32 h-[2px] mx-auto mb-6"></div>
       <p class="hero-subtitle font-display text-base sm:text-lg md:text-xl lg:text-2xl font-light italic text-mocha-gold/90 tracking-wide">
         A Miniature Dachshund
       </p>
       <p class="hero-subtitle font-body text-sm text-mocha-muted mt-3 tracking-widest uppercase">
-        🐾 39 moments captured
+        <svg class="inline-block w-4 h-4 text-mocha-gold" viewBox="0 0 100 100" fill="currentColor"><ellipse cx="50" cy="65" rx="22" ry="28"/><circle cx="28" cy="35" r="12"/><circle cx="72" cy="35" r="12"/><circle cx="18" cy="55" r="10"/><circle cx="82" cy="55" r="10"/></svg> 39 moments captured
       </p>
     </div>
 
     <!-- Scroll-down indicator -->
-    <a href="#gallery" class="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 scroll-indicator text-mocha-gold/60 hover:text-mocha-gold transition-colors">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+    <a href="#portraits" aria-label="Scroll down to gallery" class="hero-scroll-hint absolute bottom-10 left-1/2 -translate-x-1/2 z-10 scroll-indicator text-mocha-gold/60 hover:text-mocha-gold transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
       </svg>
     </a>
   </section>
 
   <!-- ════════════════════════════════════════════════════
-       GALLERY SECTION
+       CHAPTER ONE — PORTRAITS
        ════════════════════════════════════════════════════ -->
-  <section id="gallery" class="relative py-16 sm:py-24 md:py-32 px-3 sm:px-4 md:px-8">
+  <section id="portraits" class="relative py-20 sm:py-28 md:py-36 px-3 sm:px-4 md:px-8">
     <div class="max-w-7xl mx-auto">
-
-      <!-- Section header -->
-      <div class="text-center mb-10 sm:mb-16 md:mb-20">
-        <p class="text-mocha-gold text-sm font-medium tracking-[0.3em] uppercase mb-3">Gallery</p>
-        <h2 class="font-display text-2xl sm:text-3xl md:text-5xl font-semibold text-mocha-cream mb-4">Every Moment Counts</h2>
-        <div class="gold-line mx-auto mt-4 mb-6"></div>
-        <p class="text-mocha-muted text-base max-w-lg mx-auto">A collection of Mocha's most precious moments — from lazy afternoons to spirited adventures.</p>
+      <div class="section-header glass-panel">
+        <span class="section-label">Chapter One</span>
+        <h2 class="section-title">Portraits</h2>
+        <p class="section-description">Intimate moments captured through the lens — every glance tells a story</p>
+        <div class="gold-line w-24 sm:w-32 h-[2px] mx-auto"></div>
       </div>
 
-      <!-- Masonry grid -->
-      <div class="masonry" id="masonryGrid">
+      <div class="featured-image relative w-full overflow-hidden rounded-xl my-12 sm:my-16" style="aspect-ratio: 21/9;">
+        <picture>
+          <source srcset="webp/IMG_9060.webp" type="image/webp">
+          <img src="thumbs/IMG_9060.JPG" alt="Featured portrait of Mocha" class="w-full h-full object-cover featured-img" loading="lazy">
+        </picture>
+        <div class="absolute inset-0 bg-gradient-to-t from-mocha-bg/60 via-transparent to-transparent"></div>
+      </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9060.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9060.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+      <div class="masonry-grid">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9060.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha gazing softly into the distance">
+            <picture>
+              <source srcset="webp/IMG_9060.webp" type="image/webp">
+              <img src="thumbs/IMG_9060.JPG" alt="Mocha gazing softly into the distance" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9061.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9061.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9061.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha relaxing on a cozy afternoon">
+            <picture>
+              <source srcset="webp/IMG_9061.webp" type="image/webp">
+              <img src="thumbs/IMG_9061.JPG" alt="Mocha relaxing on a cozy afternoon" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9064.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9064.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9064.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Portrait of Mocha with warm golden lighting">
+            <picture>
+              <source srcset="webp/IMG_9064.webp" type="image/webp">
+              <img src="thumbs/IMG_9064.JPG" alt="Portrait of Mocha with warm golden lighting" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9066.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9066.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9066.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha tilting head with curious expression">
+            <picture>
+              <source srcset="webp/IMG_9066.webp" type="image/webp">
+              <img src="thumbs/IMG_9066.JPG" alt="Mocha tilting head with curious expression" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9067.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9067.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9067.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha nestled in a comfortable spot">
+            <picture>
+              <source srcset="webp/IMG_9067.webp" type="image/webp">
+              <img src="thumbs/IMG_9067.JPG" alt="Mocha nestled in a comfortable spot" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9068.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9068.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9068.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Close-up of Mocha's soulful brown eyes">
+            <picture>
+              <source srcset="webp/IMG_9068.webp" type="image/webp">
+              <img src="thumbs/IMG_9068.JPG" alt="Close-up of Mocha's soulful brown eyes" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9070.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9070.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9070.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha exploring with playful energy">
+            <picture>
+              <source srcset="webp/IMG_9070.webp" type="image/webp">
+              <img src="thumbs/IMG_9070.JPG" alt="Mocha exploring with playful energy" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9071.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9071.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9071.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha sitting regally in natural light">
+            <picture>
+              <source srcset="webp/IMG_9071.webp" type="image/webp">
+              <img src="thumbs/IMG_9071.JPG" alt="Mocha sitting regally in natural light" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9073.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9073.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9073.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha mid-stride on a little adventure">
+            <picture>
+              <source srcset="webp/IMG_9073.webp" type="image/webp">
+              <img src="thumbs/IMG_9073.JPG" alt="Mocha mid-stride on a little adventure" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9074.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9074.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9074.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha's ears perked up attentively">
+            <picture>
+              <source srcset="webp/IMG_9074.webp" type="image/webp">
+              <img src="thumbs/IMG_9074.JPG" alt="Mocha's ears perked up attentively" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9075.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9075.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9075.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha lounging with effortless grace">
+            <picture>
+              <source srcset="webp/IMG_9075.webp" type="image/webp">
+              <img src="thumbs/IMG_9075.JPG" alt="Mocha lounging with effortless grace" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9076.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9076.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9076.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha in a moment of quiet contemplation">
+            <picture>
+              <source srcset="webp/IMG_9076.webp" type="image/webp">
+              <img src="thumbs/IMG_9076.JPG" alt="Mocha in a moment of quiet contemplation" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9077.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9077.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9077.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha showing off a charming smile">
+            <picture>
+              <source srcset="webp/IMG_9077.webp" type="image/webp">
+              <img src="thumbs/IMG_9077.JPG" alt="Mocha showing off a charming smile" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════
+       INTERSTITIAL
+       ════════════════════════════════════════════════════ -->
+  <div class="interstitial">
+    <p>Every dachshund carries a universe of personality in a compact frame.</p>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════
+       CHAPTER TWO — ADVENTURES
+       ════════════════════════════════════════════════════ -->
+  <section id="adventures" class="relative py-20 sm:py-28 md:py-36 px-3 sm:px-4 md:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="section-header glass-panel">
+        <span class="section-label">Chapter Two</span>
+        <h2 class="section-title">Adventures</h2>
+        <p class="section-description">From sunlit paths to golden horizons — life is better at twelve inches tall</p>
+        <div class="gold-line w-24 sm:w-32 h-[2px] mx-auto"></div>
+      </div>
+
+      <div class="featured-image relative w-full overflow-hidden rounded-xl my-12 sm:my-16" style="aspect-ratio: 21/9;">
+        <picture>
+          <source srcset="webp/IMG_9078.webp" type="image/webp">
+          <img src="thumbs/IMG_9078.JPG" alt="Featured adventure with Mocha" class="w-full h-full object-cover featured-img" loading="lazy">
+        </picture>
+        <div class="absolute inset-0 bg-gradient-to-t from-mocha-bg/60 via-transparent to-transparent"></div>
+      </div>
+
+      <div class="masonry-grid">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9078.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha stretching after a long nap">
+            <picture>
+              <source srcset="webp/IMG_9078.webp" type="image/webp">
+              <img src="thumbs/IMG_9078.JPG" alt="Mocha stretching after a long nap" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9078.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9078.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9081.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha looking up with bright, eager eyes">
+            <picture>
+              <source srcset="webp/IMG_9081.webp" type="image/webp">
+              <img src="thumbs/IMG_9081.JPG" alt="Mocha looking up with bright, eager eyes" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9081.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9081.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9083.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha posing perfectly for the camera">
+            <picture>
+              <source srcset="webp/IMG_9083.webp" type="image/webp">
+              <img src="thumbs/IMG_9083.JPG" alt="Mocha posing perfectly for the camera" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9083.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9083.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9084.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha enjoying a sunny day outdoors">
+            <picture>
+              <source srcset="webp/IMG_9084.webp" type="image/webp">
+              <img src="thumbs/IMG_9084.JPG" alt="Mocha enjoying a sunny day outdoors" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9084.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9084.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9087.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha sniffing the air on a walk">
+            <picture>
+              <source srcset="webp/IMG_9087.webp" type="image/webp">
+              <img src="thumbs/IMG_9087.JPG" alt="Mocha sniffing the air on a walk" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9087.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9087.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9089.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha trotting along a scenic path">
+            <picture>
+              <source srcset="webp/IMG_9089.webp" type="image/webp">
+              <img src="thumbs/IMG_9089.JPG" alt="Mocha trotting along a scenic path" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9089.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9089.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9090.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha pausing to take in the view">
+            <picture>
+              <source srcset="webp/IMG_9090.webp" type="image/webp">
+              <img src="thumbs/IMG_9090.JPG" alt="Mocha pausing to take in the view" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9090.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9090.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9091.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha with wind ruffling through fur">
+            <picture>
+              <source srcset="webp/IMG_9091.webp" type="image/webp">
+              <img src="thumbs/IMG_9091.JPG" alt="Mocha with wind ruffling through fur" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9091.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9091.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9094.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha curled up in a warm blanket">
+            <picture>
+              <source srcset="webp/IMG_9094.webp" type="image/webp">
+              <img src="thumbs/IMG_9094.JPG" alt="Mocha curled up in a warm blanket" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9094.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9094.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9095.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha peeking out from a cozy hideaway">
+            <picture>
+              <source srcset="webp/IMG_9095.webp" type="image/webp">
+              <img src="thumbs/IMG_9095.JPG" alt="Mocha peeking out from a cozy hideaway" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9095.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9095.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9096.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha resting chin on soft pillows">
+            <picture>
+              <source srcset="webp/IMG_9096.webp" type="image/webp">
+              <img src="thumbs/IMG_9096.JPG" alt="Mocha resting chin on soft pillows" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9096.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9096.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9097.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha dozing peacefully in evening light">
+            <picture>
+              <source srcset="webp/IMG_9097.webp" type="image/webp">
+              <img src="thumbs/IMG_9097.JPG" alt="Mocha dozing peacefully in evening light" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9097.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9097.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9104.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha captured in dramatic side lighting">
+            <picture>
+              <source srcset="webp/IMG_9104.webp" type="image/webp">
+              <img src="thumbs/IMG_9104.JPG" alt="Mocha captured in dramatic side lighting" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════
+       INTERSTITIAL
+       ════════════════════════════════════════════════════ -->
+  <div class="interstitial">
+    <p>The world looks different from down here — and somehow, more beautiful.</p>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════
+       CHAPTER THREE — COZY MOMENTS
+       ════════════════════════════════════════════════════ -->
+  <section id="cozy-moments" class="relative py-20 sm:py-28 md:py-36 px-3 sm:px-4 md:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="section-header glass-panel">
+        <span class="section-label">Chapter Three</span>
+        <h2 class="section-title">Cozy Moments</h2>
+        <p class="section-description">Where warmth meets wonder — the art of doing nothing at all</p>
+        <div class="gold-line w-24 sm:w-32 h-[2px] mx-auto"></div>
+      </div>
+
+      <div class="featured-image relative w-full overflow-hidden rounded-xl my-12 sm:my-16" style="aspect-ratio: 21/9;">
+        <picture>
+          <source srcset="webp/IMG_9108.webp" type="image/webp">
+          <img src="thumbs/IMG_9108.JPG" alt="Featured cozy moment with Mocha" class="w-full h-full object-cover featured-img" loading="lazy">
+        </picture>
+        <div class="absolute inset-0 bg-gradient-to-t from-mocha-bg/60 via-transparent to-transparent"></div>
+      </div>
+
+      <div class="masonry-grid">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9108.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha looking noble in a candid moment">
+            <picture>
+              <source srcset="webp/IMG_9108.webp" type="image/webp">
+              <img src="thumbs/IMG_9108.JPG" alt="Mocha looking noble in a candid moment" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9104.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9104.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9114.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha playing with a favorite toy">
+            <picture>
+              <source srcset="webp/IMG_9114.webp" type="image/webp">
+              <img src="thumbs/IMG_9114.JPG" alt="Mocha playing with a favorite toy" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9108.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9108.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9115.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha bounding with joyful energy">
+            <picture>
+              <source srcset="webp/IMG_9115.webp" type="image/webp">
+              <img src="thumbs/IMG_9115.JPG" alt="Mocha bounding with joyful energy" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9114.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9114.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9125.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha watching the world go by">
+            <picture>
+              <source srcset="webp/IMG_9125.webp" type="image/webp">
+              <img src="thumbs/IMG_9125.JPG" alt="Mocha watching the world go by" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9115.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9115.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9127.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha in a serene, peaceful pose">
+            <picture>
+              <source srcset="webp/IMG_9127.webp" type="image/webp">
+              <img src="thumbs/IMG_9127.JPG" alt="Mocha in a serene, peaceful pose" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9125.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9125.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9131.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha with a gentle, knowing expression">
+            <picture>
+              <source srcset="webp/IMG_9131.webp" type="image/webp">
+              <img src="thumbs/IMG_9131.JPG" alt="Mocha with a gentle, knowing expression" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9127.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9127.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9136.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha basking in golden hour light">
+            <picture>
+              <source srcset="webp/IMG_9136.webp" type="image/webp">
+              <img src="thumbs/IMG_9136.JPG" alt="Mocha basking in golden hour light" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9131.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9131.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9139.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha alert and ready for adventure">
+            <picture>
+              <source srcset="webp/IMG_9139.webp" type="image/webp">
+              <img src="thumbs/IMG_9139.JPG" alt="Mocha alert and ready for adventure" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9136.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9136.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9140.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha snuggled up on a lazy day">
+            <picture>
+              <source srcset="webp/IMG_9140.webp" type="image/webp">
+              <img src="thumbs/IMG_9140.JPG" alt="Mocha snuggled up on a lazy day" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9139.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9139.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9141.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha with head cocked to one side">
+            <picture>
+              <source srcset="webp/IMG_9141.webp" type="image/webp">
+              <img src="thumbs/IMG_9141.JPG" alt="Mocha with head cocked to one side" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9140.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9140.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9145.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha captured in a candid laugh">
+            <picture>
+              <source srcset="webp/IMG_9145.webp" type="image/webp">
+              <img src="thumbs/IMG_9145.JPG" alt="Mocha captured in a candid laugh" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9141.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9141.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9146.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha resting after a day of play">
+            <picture>
+              <source srcset="webp/IMG_9146.webp" type="image/webp">
+              <img src="thumbs/IMG_9146.JPG" alt="Mocha resting after a day of play" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
 
-        <div class="masonry-item">
-          <a href="IMG_9145.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9145.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
+        <div class="masonry-item gallery-item">
+          <a href="IMG_9148.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha looking majestic in soft focus">
+            <picture>
+              <source srcset="webp/IMG_9148.webp" type="image/webp">
+              <img src="thumbs/IMG_9148.JPG" alt="Mocha looking majestic in soft focus" class="gallery-img rounded-lg" loading="lazy">
+            </picture>
           </a>
         </div>
-
-        <div class="masonry-item">
-          <a href="IMG_9146.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9146.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
-          </a>
-        </div>
-
-        <div class="masonry-item">
-          <a href="IMG_9148.JPG" class="gallery-link glightbox" data-gallery="mocha" data-description="Mocha">
-            <img src="IMG_9148.JPG" alt="Mocha the miniature dachshund" class="gallery-img rounded-lg" loading="lazy">
-          </a>
-        </div>
-
-      </div><!-- /masonry -->
+      </div>
     </div>
   </section>
 
   <!-- ════════════════════════════════════════════════════
        FOOTER
        ════════════════════════════════════════════════════ -->
-  <footer class="border-t border-mocha-border py-8 sm:py-12 px-4 sm:px-6">
-    <div class="max-w-7xl mx-auto text-center">
-      <p class="font-body text-sm text-mocha-muted tracking-wide">
-        Made with <span class="text-mocha-rose">❤️</span> for Mocha 🐾
-      </p>
+  <footer class="border-t border-mocha-border/30">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-16 sm:py-20">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+
+        <!-- Branding Column -->
+        <div>
+          <h3 class="font-display text-2xl text-mocha-cream mb-3">Mocha</h3>
+          <p class="text-mocha-muted text-sm leading-relaxed max-w-xs">
+            A curated gallery celebrating the everyday magic of a miniature dachshund.
+          </p>
+        </div>
+
+        <!-- Navigation Column -->
+        <div>
+          <h4 class="text-mocha-cream text-xs uppercase tracking-widest mb-4">Gallery</h4>
+          <nav aria-label="Footer" class="flex flex-col gap-2">
+            <a href="#portraits" class="text-mocha-muted hover:text-mocha-gold transition-colors text-sm">Portraits</a>
+            <a href="#adventures" class="text-mocha-muted hover:text-mocha-gold transition-colors text-sm">Adventures</a>
+            <a href="#cozy-moments" class="text-mocha-muted hover:text-mocha-gold transition-colors text-sm">Cozy Moments</a>
+          </nav>
+        </div>
+
+        <!-- Credits Column -->
+        <div class="md:text-right">
+          <p class="text-mocha-muted text-sm">
+            Crafted with <span class="text-mocha-rose">love</span>
+          </p>
+          <p class="text-mocha-muted/60 text-xs mt-2">
+            &copy; 2025 All rights reserved
+          </p>
+        </div>
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="mt-12 pt-8 border-t border-mocha-border/20 flex items-center justify-center">
+        <svg class="w-5 h-5 text-mocha-gold/40" viewBox="0 0 100 100" fill="currentColor">
+          <ellipse cx="50" cy="65" rx="22" ry="28"/>
+          <circle cx="28" cy="35" r="12"/>
+          <circle cx="72" cy="35" r="12"/>
+          <circle cx="18" cy="55" r="10"/>
+          <circle cx="82" cy="55" r="10"/>
+        </svg>
+      </div>
     </div>
   </footer>
 
@@ -531,7 +1065,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <!-- GLightbox -->
-  <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
 
   <script>
     /* ── GLightbox Init ──────────────────────────────── */
@@ -548,37 +1082,58 @@
 
     const isMobile = window.innerWidth < 640;
 
-    /* ── Hero Animations ─────────────────────────────── */
-    const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    /* ── Hero Reveal Function ────────────────────────── */
+    function heroReveal() {
+      const heroTl = gsap.timeline();
 
-    heroTl
-      .to('.hero-title', {
-        opacity: 1,
-        letterSpacing: isMobile ? '0.15em' : '0.35em',
-        duration: 1.4,
-        delay: 0.3,
-      })
-      .from('.hero-title', {
-        letterSpacing: isMobile ? '0.4em' : '0.8em',
-        duration: 1.4,
-      }, '<')
-      .to('.hero-subtitle', {
-        opacity: 1,
-        y: 0,
-        duration: 0.9,
-        stagger: 0.2,
-      }, '-=0.6')
-      .from('.hero-subtitle', {
-        y: 20,
-        duration: 0.9,
-        stagger: 0.2,
-      }, '<')
-      .from('.gold-line', {
-        scaleX: 0,
+      heroTl.to('.hero-title .char', {
+        y: 0, opacity: 1,
         duration: 0.8,
-      }, '-=1');
+        stagger: 0.1,
+        ease: 'power3.out',
+        rotateX: 0
+      })
+      .from('.hero-title .char', {
+        rotateX: -90,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: 'power3.out'
+      }, 0)
+      .to('.hero-subtitle', {
+        y: 0, opacity: 1, duration: 0.8, ease: 'power2.out'
+      }, '-=0.4')
+      .to('.hero-gold-line', {
+        scaleX: 1, opacity: 1, duration: 0.6, ease: 'power2.out'
+      }, '-=0.3')
+      .to('.hero-scroll-hint', {
+        opacity: 1, duration: 0.5
+      }, '-=0.2');
+    }
 
-    /* ── Hero Parallax ───────────────────────────────── */
+    /* ── Preloader Exit ──────────────────────────────── */
+    window.addEventListener('load', () => {
+      const preloader = document.getElementById('preloader');
+      const tl = gsap.timeline();
+
+      tl.to('.preloader-title', {
+        y: -20, opacity: 0, duration: 0.5, ease: 'power2.in'
+      })
+      .to('.preloader-paw', {
+        scale: 0.5, opacity: 0, duration: 0.4, ease: 'power2.in'
+      }, '-=0.3')
+      .to(preloader, {
+        opacity: 0, duration: 0.6, ease: 'power2.inOut',
+        onComplete: () => {
+          preloader.style.display = 'none';
+          // Cancel the CSS fallback animation
+          preloader.style.animation = 'none';
+          // Trigger hero animations after preloader
+          heroReveal();
+        }
+      }, '-=0.2');
+    });
+
+    /* ── Hero Background Parallax ────────────────────── */
     gsap.to('#heroBg', {
       yPercent: 25,
       ease: 'none',
@@ -590,23 +1145,133 @@
       },
     });
 
-    /* ── Gallery Scroll Animations ────────────────────── */
-    const masonryItems = gsap.utils.toArray('.masonry-item');
-
-    masonryItems.forEach((item, i) => {
-      gsap.to(item, {
-        opacity: 1,
-        y: 0,
-        duration: 0.7,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: item,
-          start: 'top 92%',
-          end: 'top 60%',
-          toggleActions: 'play none none none',
-        },
-        delay: (i % 4) * 0.08,
+    /* ── Parallax Depth Layers ───────────────────────── */
+    const hero = document.querySelector('.hero-section');
+    if (hero) {
+      gsap.to('.parallax-circle-1', {
+        y: -100, scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.3 }
       });
+      gsap.to('.parallax-circle-2', {
+        y: -150, scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.5 }
+      });
+      gsap.to('.parallax-circle-3', {
+        y: -80, x: 30, scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.4 }
+      });
+    }
+
+    /* ── Hero Mouse-Tracking Parallax (Desktop) ──────── */
+    if (!isMobile && hero) {
+      let mouseX = 0, mouseY = 0, currentX = 0, currentY = 0;
+
+      hero.addEventListener('mousemove', (e) => {
+        const rect = hero.getBoundingClientRect();
+        mouseX = (e.clientX - rect.left - rect.width / 2) / rect.width;
+        mouseY = (e.clientY - rect.top - rect.height / 2) / rect.height;
+      });
+
+      function animateHeroParallax() {
+        currentX += (mouseX - currentX) * 0.08;
+        currentY += (mouseY - currentY) * 0.08;
+
+        gsap.set('.hero-title', { x: currentX * 20, y: currentY * 15 });
+        gsap.set('.hero-subtitle', { x: currentX * 12, y: currentY * 10 });
+        gsap.set('.hero-gold-line', { x: currentX * 8, y: currentY * 6 });
+
+        requestAnimationFrame(animateHeroParallax);
+      }
+      animateHeroParallax();
+
+      // Ambient glow following cursor
+      const glow = hero.querySelector('.hero-glow');
+      if (glow) {
+        hero.addEventListener('mousemove', (e) => {
+          const x = (e.clientX / window.innerWidth) * 100;
+          const y = (e.clientY / window.innerHeight) * 100;
+          glow.style.background = `radial-gradient(600px circle at ${x}% ${y}%, rgba(212,165,116,0.08), transparent 60%)`;
+        });
+      }
+    }
+
+    /* ── Gallery & Section Animations ────────────────── */
+    if (isMobile) {
+      /* Mobile: simple fade-in only */
+      gsap.utils.toArray('.gallery-item').forEach(item => {
+        gsap.fromTo(item,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.5,
+            scrollTrigger: { trigger: item, start: 'top 90%', toggleActions: 'play none none none' }
+          }
+        );
+      });
+    } else {
+      /* Desktop: section-specific animations */
+
+      // Portraits — scale-up zoom reveal
+      gsap.utils.toArray('#portraits .gallery-item').forEach((item, i) => {
+        gsap.fromTo(item,
+          { scale: 0.85, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.7, ease: 'power2.out',
+            scrollTrigger: { trigger: item, start: 'top 88%', end: 'top 60%',
+              toggleActions: 'play none none reverse' }
+          }
+        );
+      });
+
+      // Adventures — slide from alternating sides
+      gsap.utils.toArray('#adventures .gallery-item').forEach((item, i) => {
+        const fromX = i % 2 === 0 ? -60 : 60;
+        gsap.fromTo(item,
+          { x: fromX, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.8, ease: 'power2.out',
+            scrollTrigger: { trigger: item, start: 'top 88%', end: 'top 60%',
+              toggleActions: 'play none none reverse' }
+          }
+        );
+      });
+
+      // Cozy Moments — blur-in with subtle rotation
+      gsap.utils.toArray('#cozy-moments .gallery-item').forEach((item, i) => {
+        gsap.fromTo(item,
+          { opacity: 0, filter: 'blur(8px)', rotate: i % 2 === 0 ? -2 : 2 },
+          { opacity: 1, filter: 'blur(0px)', rotate: 0, duration: 0.9, ease: 'power2.out',
+            scrollTrigger: { trigger: item, start: 'top 88%', end: 'top 60%',
+              toggleActions: 'play none none reverse' }
+          }
+        );
+      });
+    }
+
+    /* ── Featured Images — Parallax Scrub ─────────────── */
+    document.querySelectorAll('.featured-image').forEach(img => {
+      gsap.fromTo(img,
+        { y: 40, opacity: 0.3, scale: 0.96 },
+        { y: 0, opacity: 1, scale: 1,
+          scrollTrigger: { trigger: img, start: 'top 90%', end: 'top 40%',
+            scrub: 0.5 }
+        }
+      );
+    });
+
+    /* ── Section Headers — Clip-path Reveal ──────────── */
+    document.querySelectorAll('.section-header').forEach((header) => {
+      gsap.fromTo(header,
+        { clipPath: 'inset(10% 20% 10% 20%)', opacity: 0 },
+        { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, duration: 1, ease: 'power3.out',
+          scrollTrigger: { trigger: header, start: 'top 80%',
+            toggleActions: 'play none none reverse' }
+        }
+      );
+    });
+
+    /* ── Interstitial — Fade + Parallax ──────────────── */
+    document.querySelectorAll('.interstitial').forEach((el) => {
+      gsap.fromTo(el,
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 85%',
+            toggleActions: 'play none none reverse' }
+        }
+      );
     });
 
     /* ── Sticky Header ───────────────────────────────── */
@@ -623,18 +1288,54 @@
       },
     });
 
-    /* ── Section Header Fade-in ──────────────────────── */
-    gsap.from('#gallery .text-center', {
-      opacity: 0,
-      y: 30,
-      duration: 1,
-      ease: 'power2.out',
-      scrollTrigger: {
-        trigger: '#gallery',
-        start: 'top 80%',
-        toggleActions: 'play none none none',
-      },
+
+    /* ── Image Load Fade-In ─────────────────────────── */
+    document.querySelectorAll('.gallery-img, .featured-img').forEach(img => {
+      if (img.complete) {
+        img.style.opacity = '1';
+      } else {
+        img.addEventListener('load', () => { img.style.opacity = '1'; });
+      }
     });
+
+
+    /* ── Scroll Progress Bar ──────────────────────────── */
+    let scrollTicking = false;
+    window.addEventListener('scroll', () => {
+      if (!scrollTicking) {
+        requestAnimationFrame(() => {
+          const scrollTop = document.documentElement.scrollTop;
+          const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const progress = (scrollTop / scrollHeight) * 100;
+          document.getElementById('scrollProgress').style.width = progress + '%';
+          scrollTicking = false;
+        });
+        scrollTicking = true;
+      }
+    });
+
+
+    /* ── Nav Link Active State ────────────────────────── */
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('nav a[href^="#"]');
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.remove('text-[#d4a574]');
+            link.classList.remove('text-mocha-cream/70');
+            link.classList.add('text-[#b0a090]');
+            if (link.getAttribute('href') === '#' + entry.target.id) {
+              link.classList.remove('text-[#b0a090]');
+              link.classList.add('text-[#d4a574]');
+            }
+          });
+        }
+      });
+    }, { threshold: 0.3 });
+
+    sections.forEach(section => sectionObserver.observe(section));
   </script>
 
 </body>
